@@ -3,13 +3,19 @@
 import { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import { Message } from '@/types/chat';
+import { useAuth } from '@/context/AuthContext';
+import Link from 'next/link';
 
 export default function ChatInterface() {
+  const { user } = useAuth();
+  
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       role: 'system',
-      content: 'Hello! I\'m your healthcare assistant. How can I help you today?',
+      content: user 
+        ? `Hello ${user.name}! I'm your healthcare assistant. How can I help you today?` 
+        : `Hello! I'm your healthcare assistant. How can I help you today?`,
       timestamp: new Date(),
     },
   ]);
@@ -22,6 +28,22 @@ export default function ChatInterface() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Update welcome message when user logs in
+  useEffect(() => {
+    if (messages.length === 1 && messages[0].role === 'system') {
+      setMessages([
+        {
+          id: '1',
+          role: 'system',
+          content: user 
+            ? `Hello ${user.name}! I'm your healthcare assistant. How can I help you today?` 
+            : `Hello! I'm your healthcare assistant. How can I help you today?`,
+          timestamp: new Date(),
+        },
+      ]);
+    }
+  }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,13 +63,20 @@ export default function ChatInterface() {
     setIsLoading(true);
     
     try {
+      // Get auth token if user is logged in
+      const token = localStorage.getItem('auth_token');
+      
       // Send message to API
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ 
+          message: input,
+          userId: user?.id
+        }),
       });
       
       if (!response.ok) {
@@ -85,6 +114,16 @@ export default function ChatInterface() {
   return (
     <div className="flex flex-col h-full max-w-2xl mx-auto">
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {!user && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+            <p className="text-blue-700 text-sm">
+              <span className="font-medium">Tip:</span> {' '}
+              <Link href="/auth/signup" className="underline">Create an account</Link> or{' '}
+              <Link href="/auth/signin" className="underline">sign in</Link> to save your chat history and receive personalized assistance.
+            </p>
+          </div>
+        )}
+        
         {messages.map((message) => (
           <ChatMessage key={message.id} message={message} />
         ))}

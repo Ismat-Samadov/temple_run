@@ -3,12 +3,13 @@ import ChatInterface from '@/components/ChatInterface';
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">Healthcare Assistant</h1>
+      <div className="flex-1 bg-gray-50 p-4 pt-6">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Healthcare Assistant</h1>
+          <p className="text-gray-600 mb-4">
+            Get quick answers to your health questions and general medical information.
+          </p>
         </div>
-      </header>
-      <div className="flex-1 bg-gray-50 p-4">
         <div className="max-w-2xl mx-auto bg-white rounded-lg shadow h-[70vh] flex flex-col">
           <ChatInterface />
         </div>
