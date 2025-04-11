@@ -13,6 +13,11 @@ interface AuthContextType {
   signOut: () => void;
 }
 
+// Define the structure of the error response from the API
+interface ErrorResponse {
+  message?: string;
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -66,8 +71,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       return result;
     } catch (err: unknown) {
-      const axiosError = err as AxiosError;
-      const message = axiosError.response?.data?.message as string || 'Sign in failed';
+      const axiosError = err as AxiosError<ErrorResponse>;
+      const message = axiosError.response?.data?.message || 'Sign in failed';
       setError(message);
       return { success: false, message };
     } finally {
@@ -92,8 +97,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       return result;
     } catch (err: unknown) {
-      const axiosError = err as AxiosError;
-      const message = axiosError.response?.data?.message as string || 'Sign up failed';
+      const axiosError = err as AxiosError<ErrorResponse>;
+      const message = axiosError.response?.data?.message || 'Sign up failed';
       setError(message);
       return { success: false, message };
     } finally {

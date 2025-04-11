@@ -5,7 +5,7 @@ import { findUserById } from '@/lib/user-db';
 
 export async function POST(request: Request) {
   try {
-    const { message, userId: requestUserId } = await request.json();
+    const { message } = await request.json();
     
     if (!message) {
       return NextResponse.json(
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // If a userId was provided but doesn't match the authenticated user, ignore it
+    // Use the authenticated user's ID for chat context
     const effectiveUserId = authenticatedUser?.id || null;
     
     // Process the healthcare query, potentially with user context

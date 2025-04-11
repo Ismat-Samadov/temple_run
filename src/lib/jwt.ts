@@ -21,7 +21,8 @@ export function generateToken(user: User): string {
 export function verifyToken(token: string): JwtPayload | null {
   try {
     return jwt.verify(token, JWT_SECRET) as JwtPayload;
-  } catch (_) {
+  } catch {
+    // Ignore the error and return null for invalid tokens
     return null;
   }
 }
