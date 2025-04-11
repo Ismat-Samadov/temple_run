@@ -8,160 +8,19 @@ import {
   Heart, 
   Activity, 
   User, 
-  Send, 
-  Info, 
   AlertCircle, 
-  ArrowRight, 
-  Menu, 
-  X 
+  ArrowRight
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+// import Navbar from '@/components/Navbar'; // Import the new Navbar component
 
 export default function Home() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Navigation Bar */}
-      <nav className="bg-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 flex items-center">
-                <Heart className="h-8 w-8 text-blue-600" />
-                <span className="ml-2 text-xl font-bold text-gray-900">Healthcare Assistant</span>
-              </div>
-              <div className="hidden md:ml-6 md:flex md:space-x-8">
-                <a href="#" className="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
-                  Home
-                </a>
-                <a href="#features" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                  Features
-                </a>
-                <a href="#chat" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                  Chat
-                </a>
-                <Link
-                  href="/terms"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Terms
-                </Link>
-              </div>
-            </div>
-            <div className="hidden md:flex items-center">
-              {user ? (
-                <Link href="/profile">
-                  <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-md shadow-sm mr-2">
-                    My Profile
-                  </button>
-                </Link>
-              ) : (
-                <>
-                  <Link href="/auth/signin">
-                    <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-md shadow-sm mr-2">
-                      Sign In
-                    </button>
-                  </Link>
-                  <Link href="/auth/signup">
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 border border-blue-600 rounded-md shadow-sm">
-                      Sign Up
-                    </button>
-                  </Link>
-                </>
-              )}
-            </div>
-            
-            {/* Mobile menu button */}
-            <div className="flex items-center md:hidden">
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
-              >
-                {isMobileMenuOpen ? (
-                  <X className="block h-6 w-6" />
-                ) : (
-                  <Menu className="block h-6 w-6" />
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        {/* Mobile menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden">
-            <div className="pt-2 pb-3 space-y-1">
-              <a href="#" className="bg-blue-50 border-l-4 border-blue-500 text-blue-700 block pl-3 pr-4 py-2 text-base font-medium">
-                Home
-              </a>
-              <a href="#features" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                Features
-              </a>
-              <a href="#chat" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                Chat
-              </a>
-              <Link href="/terms" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                Terms
-              </Link>
-            </div>
-            <div className="pt-4 pb-3 border-t border-gray-200">
-              <div className="flex items-center px-4">
-                <div className="flex-shrink-0">
-                  <User className="h-10 w-10 rounded-full bg-gray-100 p-2 text-gray-600" />
-                </div>
-                <div className="ml-3">
-                  {user ? (
-                    <>
-                      <div className="text-base font-medium text-gray-800">{user.name}</div>
-                      <div className="text-sm font-medium text-gray-500">{user.email}</div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="text-base font-medium text-gray-800">Guest User</div>
-                      <div className="text-sm font-medium text-gray-500">Not signed in</div>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="mt-3 space-y-1">
-                {user ? (
-                  <>
-                    <Link href="/profile">
-                      <span className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
-                        Profile
-                      </span>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        // User signOut function from AuthContext
-                        window.location.href = '/auth/signin';
-                      }}
-                      className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                    >
-                      Sign Out
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/auth/signin">
-                      <span className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
-                        Sign In
-                      </span>
-                    </Link>
-                    <Link href="/auth/signup">
-                      <span className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
-                        Sign Up
-                      </span>
-                    </Link>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-      </nav>
+      {/* Use the imported Navbar component instead of inline navbar */}
+      {/* <Navbar /> */}
 
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12">
@@ -230,7 +89,9 @@ export default function Home() {
             <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <div className="p-6">
                 <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4">
-                  <Info className="h-6 w-6 text-blue-600" />
+                  <svg className="h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Health Information</h3>
                 <p className="text-gray-600">
