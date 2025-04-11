@@ -23,10 +23,10 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold text-gray-800 mb-3">1. Acceptance of Terms</h2>
             <p>
-              By accessing or using the Healthcare Assistant application ("Application"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use the Application.
+              By accessing or using the Healthcare Assistant application (&ldquo;Application&rdquo;), you agree to be bound by these Terms of Service (&ldquo;Terms&rdquo;). If you do not agree to these Terms, please do not use the Application.
             </p>
             <p className="mt-2">
-              These Terms constitute a legally binding agreement between you and Healthcare Assistant ("we," "our," or "us") regarding your use of the Application. Please read them carefully.
+              These Terms constitute a legally binding agreement between you and Healthcare Assistant (&ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us&rdquo;) regarding your use of the Application. Please read them carefully.
             </p>
           </section>
           
@@ -88,7 +88,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold text-gray-800 mb-3">6. User Content</h2>
             <p>
-              "User Content" means any information, data, text, or other materials that users submit to the Application. You retain all rights to your User Content, but you grant us a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use, copy, modify, create derivative works based on, distribute, publicly display, and otherwise exploit your User Content in connection with operating and providing the Application.
+              &ldquo;User Content&rdquo; means any information, data, text, or other materials that users submit to the Application. You retain all rights to your User Content, but you grant us a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use, copy, modify, create derivative works based on, distribute, publicly display, and otherwise exploit your User Content in connection with operating and providing the Application.
             </p>
             <p className="mt-2">
               You are solely responsible for your User Content and the consequences of posting or publishing it. By submitting User Content, you represent and warrant that:
@@ -117,7 +117,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold text-gray-800 mb-3">9. Disclaimer of Warranties</h2>
             <p>
-              THE APPLICATION IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE APPLICATION WILL BE UNINTERRUPTED OR ERROR-FREE, THAT DEFECTS WILL BE CORRECTED, OR THAT THE APPLICATION IS FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS.
+              THE APPLICATION IS PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS AVAILABLE&rdquo; WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE APPLICATION WILL BE UNINTERRUPTED OR ERROR-FREE, THAT DEFECTS WILL BE CORRECTED, OR THAT THE APPLICATION IS FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS.
             </p>
           </section>
           
@@ -131,7 +131,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold text-gray-800 mb-3">11. Indemnification</h2>
             <p>
-              You agree to indemnify, defend, and hold harmless Healthcare Assistant and its officers, directors, employees, agents, and affiliates from and against any and all claims, liabilities, damages, losses, costs, expenses, or fees (including reasonable attorneys' fees) that arise from or relate to your use of the Application or violation of these Terms.
+              You agree to indemnify, defend, and hold harmless Healthcare Assistant and its officers, directors, employees, agents, and affiliates from and against any and all claims, liabilities, damages, losses, costs, expenses, or fees (including reasonable attorneys&apos; fees) that arise from or relate to your use of the Application or violation of these Terms.
             </p>
           </section>
           
@@ -145,7 +145,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold text-gray-800 mb-3">13. Changes to Terms</h2>
             <p>
-              We reserve the right to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.
+              We reserve the right to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days&apos; notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.
             </p>
           </section>
           

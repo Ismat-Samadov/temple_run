@@ -23,7 +23,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-semibold text-gray-800 mb-3">1. Introduction</h2>
             <p>
-              Welcome to the Healthcare Assistant ("we," "our," or "us"). We are committed to protecting your privacy and personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our application.
+              Welcome to the Healthcare Assistant (&ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us&rdquo;). We are committed to protecting your privacy and personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our application.
             </p>
             <p className="mt-2">
               Please read this Privacy Policy carefully. By accessing or using our application, you acknowledge that you have read, understood, and agree to be bound by this Privacy Policy.
@@ -48,7 +48,7 @@ export default function PrivacyPolicy() {
             </p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
               <li>Your questions and conversations with our healthcare assistant</li>
-              <li>Information about health topics you're interested in</li>
+              <li>Information about health topics you&apos;re interested in</li>
             </ul>
             
             <h3 className="text-lg font-medium text-gray-800 mb-2 mt-4">2.3 Usage Information</h3>
@@ -122,12 +122,12 @@ export default function PrivacyPolicy() {
               <li>The right to withdraw consent</li>
             </ul>
             <p className="mt-2">
-              To exercise these rights, please contact us using the information provided in the "Contact Us" section.
+              To exercise these rights, please contact us using the information provided in the &ldquo;Contact Us&rdquo; section.
             </p>
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">8. Children's Privacy</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-3">8. Children&apos;s Privacy</h2>
             <p>
               Our application is not intended for use by children under 16 years of age. We do not knowingly collect personal information from children under 16. If we become aware that we have collected personal information from a child under 16 without verification of parental consent, we will take steps to remove that information from our servers.
             </p>
@@ -136,7 +136,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-semibold text-gray-800 mb-3">9. Changes to This Privacy Policy</h2>
             <p>
-              We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date. You are advised to review this Privacy Policy periodically for any changes.
+              We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the &ldquo;Last Updated&rdquo; date. You are advised to review this Privacy Policy periodically for any changes.
             </p>
           </section>
           
