@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, SignInData, SignUpData, AuthResponse } from '@/types/user';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 interface AuthContextType {
   user: User | null;
@@ -65,8 +65,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       
       return result;
-    } catch (err: any) {
-      const message = err.response?.data?.message || 'Sign in failed';
+    } catch (err: unknown) {
+      const axiosError = err as AxiosError;
+      const message = axiosError.response?.data?.message as string || 'Sign in failed';
       setError(message);
       return { success: false, message };
     } finally {
@@ -90,8 +91,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       
       return result;
-    } catch (err: any) {
-      const message = err.response?.data?.message || 'Sign up failed';
+    } catch (err: unknown) {
+      const axiosError = err as AxiosError;
+      const message = axiosError.response?.data?.message as string || 'Sign up failed';
       setError(message);
       return { success: false, message };
     } finally {

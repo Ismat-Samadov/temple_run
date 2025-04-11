@@ -61,6 +61,7 @@ export default function ChatInterface() {
         }
       ]);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleSubmit = async (e: React.FormEvent, submittedText?: string) => {

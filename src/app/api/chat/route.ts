@@ -5,7 +5,7 @@ import { findUserById } from '@/lib/user-db';
 
 export async function POST(request: Request) {
   try {
-    const { message, userId } = await request.json();
+    const { message, userId: requestUserId } = await request.json();
     
     if (!message) {
       return NextResponse.json(
