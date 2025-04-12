@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources';
-import { findUserById } from './user-db';
+import { findUserById, saveChatMessage, getChatHistory } from './user-db';
 
 // Initialize OpenAI client
 // Note: You should use environment variables for the API key in production
@@ -43,8 +43,8 @@ const healthCategories = {
   'special_topics': ['pregnancy', 'covid', 'emergency care']
 };
 
-// In-memory storage for user conversation history (in a real app, use a database)
-const userConversationHistory: Record<string, Array<ChatCompletionMessageParam>> = {};
+// Use cached conversation history for the current session to reduce database load
+const sessionConversationCache: Record<string, Array<ChatCompletionMessageParam>> = {};
 
 /**
  * Process a healthcare-related query and return a response
@@ -55,33 +55,72 @@ export async function processHealthcareQuery(query: string, userId?: string | nu
   
   // Get or initialize user conversation history
   let conversationHistory: Array<ChatCompletionMessageParam> = [];
+  
   if (userId) {
-    if (!userConversationHistory[userId]) {
-      userConversationHistory[userId] = [];
+    // Check if we already have this user's conversation in cache
+    if (!sessionConversationCache[userId]) {
+      // If not in cache, try to load from database
+      try {
+        const dbHistory = await getChatHistory(userId);
+        // Convert DB format to ChatCompletionMessageParam format
+        sessionConversationCache[userId] = dbHistory.map(item => ({
+          role: item.role,
+          content: item.content
+        })).reverse(); // Reverse to get chronological order
+      } catch (error) {
+        console.error('Error loading chat history:', error);
+        sessionConversationCache[userId] = [];
+      }
     }
-    conversationHistory = userConversationHistory[userId];
+    
+    conversationHistory = sessionConversationCache[userId];
   }
   
   // Check if the query is asking for available topics
   if (lowerQuery.includes('what can you help with') || 
       lowerQuery.includes('what topics') || 
       lowerQuery.includes('what do you know about')) {
-    return generateTopicsList();
+    const response = generateTopicsList();
+    
+    // Save to database if user is logged in
+    if (userId) {
+      await saveChatMessage(userId, query, 'user');
+      await saveChatMessage(userId, response, 'system');
+      
+      // Update cache
+      conversationHistory.push({ role: "user", content: query });
+      conversationHistory.push({ role: "assistant", content: response });
+      
+      // Keep conversation history to a reasonable size
+      if (conversationHistory.length > 20) {
+        conversationHistory.splice(0, 2); // Remove oldest exchange
+      }
+    }
+    
+    return response;
   }
   
   // Check if query matches any keywords in our knowledge base
   for (const [keyword, response] of Object.entries(healthcareKnowledgeBase)) {
     if (lowerQuery.includes(keyword)) {
+      const fullResponse = response + disclaimerText();
+      
       // Add this interaction to conversation history if user is logged in
       if (userId) {
+        await saveChatMessage(userId, query, 'user');
+        await saveChatMessage(userId, fullResponse, 'system');
+        
+        // Update cache
         conversationHistory.push({ role: "user", content: query });
-        conversationHistory.push({ role: "assistant", content: response });
+        conversationHistory.push({ role: "assistant", content: fullResponse });
+        
         // Keep conversation history to a reasonable size
         if (conversationHistory.length > 20) {
           conversationHistory.splice(0, 2); // Remove oldest exchange
         }
       }
-      return response + disclaimerText();
+      
+      return fullResponse;
     }
   }
   
@@ -116,7 +155,7 @@ export async function processHealthcareQuery(query: string, userId?: string | nu
       // Generate a response
       const completion = await openai.chat.completions.create({
         messages,
-        model: "gpt-3.5-turbo",
+        model: "gpt-3.5-turbo", // You might want to update this to the latest model
         temperature: 0.7,
         max_tokens: 500,
       });
@@ -125,8 +164,13 @@ export async function processHealthcareQuery(query: string, userId?: string | nu
       
       // Add this interaction to conversation history if user is logged in
       if (userId) {
+        await saveChatMessage(userId, query, 'user');
+        await saveChatMessage(userId, aiResponse, 'system');
+        
+        // Update cache
         conversationHistory.push({ role: "user", content: query });
         conversationHistory.push({ role: "assistant", content: aiResponse });
+        
         // Keep conversation history to a reasonable size
         if (conversationHistory.length > 20) {
           conversationHistory.splice(0, 2); // Remove oldest exchange

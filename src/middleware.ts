@@ -1,6 +1,18 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifyToken } from './lib/jwt';
+import initializeDatabase from './lib/initDB';
+
+// Initialize the database when the server starts
+// This is executed only once when the server initializes
+try {
+  console.log('Starting database initialization from middleware...');
+  initializeDatabase().catch(err => {
+    console.error('Failed to initialize database from middleware:', err);
+  });
+} catch (error) {
+  console.error('Error during database initialization in middleware:', error);
+}
 
 // Add routes that should be protected here
 const PROTECTED_ROUTES = [
