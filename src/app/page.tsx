@@ -46,30 +46,10 @@ export default function Home() {
               Your personal AI-powered healthcare companion providing reliable information and guidance when you need it most.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4">
-              {user ? (
-                <Link 
-                  href="/chat" 
-                  className="px-8 py-4 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium text-lg shadow-lg hover:shadow-indigo-500/30 transition duration-300 transform hover:-translate-y-1"
-                >
-                  Start Chatting Now
-                </Link>
-              ) : (
-                <>
-                  <Link 
-                    href="/auth/signin" 
-                    className="px-8 py-4 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium text-lg shadow-lg hover:shadow-indigo-500/30 transition duration-300 transform hover:-translate-y-1"
-                  >
-                    Get Started
-                  </Link>
-                  <Link 
-                    href="/auth/signup" 
-                    className="px-8 py-4 rounded-full bg-transparent border-2 border-indigo-400 text-indigo-100 font-medium text-lg shadow-lg hover:bg-indigo-900/30 transition duration-300"
-                  >
-                    Create Account
-                  </Link>
-                </>
-              )}
+            <div className="mt-4">
+              <p className="text-indigo-200 text-xl">
+                The intelligent healthcare companion for the modern age
+              </p>
             </div>
           </div>
         </div>
@@ -123,28 +103,17 @@ export default function Home() {
         </div>
       </div>
 
-      {/* CTA Section */}
+      {/* Quote Section - Replacing CTA */}
       <div className="bg-gradient-to-b from-gray-900 to-indigo-950 py-16">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold mb-8 text-white">Ready to take charge of your health?</h2>
-          <div className="max-w-md mx-auto">
-            {user ? (
-              <Link 
-                href="/chat" 
-                className="inline-block w-full px-6 py-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-lg transition duration-300"
-              >
-                Start a Conversation
-              </Link>
-            ) : (
-              <Link 
-                href="/auth/signup" 
-                className="inline-block w-full px-6 py-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-lg transition duration-300"
-              >
-                Create Your Free Account
-              </Link>
-            )}
-            <p className="mt-4 text-sm text-indigo-200">
-              Receive personalized healthcare guidance in seconds
+          <h2 className="text-3xl font-bold mb-8 text-white">What Healthcare Means To Us</h2>
+          <div className="max-w-3xl mx-auto">
+            <blockquote className="text-xl italic text-indigo-100 mb-6">
+              "The goal of our healthcare assistant is to make reliable health information accessible to everyone, 
+              empowering you to make informed decisions about your wellbeing."
+            </blockquote>
+            <p className="text-indigo-200">
+              Powered by advanced AI technology to provide evidence-based guidance
             </p>
           </div>
         </div>
