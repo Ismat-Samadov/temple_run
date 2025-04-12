@@ -1,6 +1,9 @@
-// This script can be run to initialize the database schema
-require('dotenv').config({ path: '.env.local' });
+// TypeScript version of the database initialization script with CommonJS syntax
+const dotenv = require('dotenv');
 const { Pool } = require('pg');
+
+// Load environment variables from .env.local
+dotenv.config({ path: '.env.local' });
 
 // Create a database connection
 const pool = new Pool({
@@ -13,7 +16,7 @@ const pool = new Pool({
 });
 
 // Function to execute SQL queries
-async function query(text, params) {
+async function query(text: string, params?: any[]): Promise<any> {
   const client = await pool.connect();
   try {
     return await client.query(text, params);
@@ -23,7 +26,7 @@ async function query(text, params) {
 }
 
 // Function to initialize the database
-async function initDatabase() {
+async function initDatabase(): Promise<void> {
   try {
     console.log('Creating users table...');
     // Create users table
