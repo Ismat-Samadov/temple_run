@@ -30,10 +30,14 @@ export default function Navbar() {
   };
 
   // Simplified nav items - added Blog link that's visible to all users
+  // Add Appointment link that's only visible to authenticated users
   const navItems = [
     { label: 'Home', href: '/' },
     { label: 'Blog', href: '/blog' },
-    ...(user ? [{ label: 'Chat', href: '/chat' }] : []),
+    ...(user ? [
+      { label: 'Chat', href: '/chat' },
+      { label: 'Appointments', href: '/appointments' } // Add new appointments link for authenticated users
+    ] : []),
   ];
 
   return (
@@ -148,6 +152,13 @@ export default function Navbar() {
                   className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800"
                 >
                   Chat
+                </Link>
+                <Link 
+                  href="/appointments"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800"
+                >
+                  Appointments
                 </Link>
                 <button
                   onClick={handleSignOut}
