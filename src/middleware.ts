@@ -24,7 +24,8 @@ const PROTECTED_ROUTES = [
   '/dashboard',
   '/chat',
   '/profile',
-  '/api/chat'
+  '/api/chat',
+  '/api/auth/me'
 ];
 
 export function middleware(request: NextRequest) {
