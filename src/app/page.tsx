@@ -1,27 +1,21 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import ChatInterface from '@/components/ChatInterface';
+import { useState } from 'react';
 import { 
   MessageCircle, 
   Heart, 
   Activity, 
   User, 
-  AlertCircle, 
   ArrowRight
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-// import Navbar from '@/components/Navbar'; // Import the new Navbar component
 
 export default function Home() {
   const { user } = useAuth();
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Use the imported Navbar component instead of inline navbar */}
-      {/* <Navbar /> */}
-
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,12 +28,20 @@ export default function Home() {
                 Get reliable answers to your health questions and personalized guidance from our AI-powered assistant.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                <a href="#chat" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50">
-                  Start Chatting <ArrowRight className="ml-2 -mr-1 h-5 w-5" />
-                </a>
-                <a href="#features" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600">
-                  Learn More
-                </a>
+                {user ? (
+                  <Link href="/chat" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50">
+                    Start Chatting <ArrowRight className="ml-2 -mr-1 h-5 w-5" />
+                  </Link>
+                ) : (
+                  <>
+                    <Link href="/auth/signin" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50">
+                      Sign In to Chat <ArrowRight className="ml-2 -mr-1 h-5 w-5" />
+                    </Link>
+                    <Link href="/auth/signup" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600">
+                      Create an Account
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
             <div className="mt-12 lg:mt-0 lg:w-1/2">
@@ -64,6 +66,11 @@ export default function Home() {
                     <div className="flex justify-start mb-4">
                       <div className="bg-blue-100 rounded-lg py-2 px-4 max-w-[75%] text-gray-800">
                         You can ask me about common health conditions, preventive care, lifestyle topics, and more.
+                      </div>
+                    </div>
+                    <div className="flex justify-end mb-4">
+                      <div className="bg-blue-600 rounded-lg py-2 px-4 max-w-[75%] text-white">
+                        Sign in to start your health conversation!
                       </div>
                     </div>
                   </div>
@@ -123,34 +130,6 @@ export default function Home() {
                 <p className="text-gray-600">
                   Create an account to track your conversations and receive personalized guidance tailored to your health needs.
                 </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Chat Interface Section */}
-        <div id="chat" className="mb-16">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
-              Chat with our Healthcare Assistant
-            </h2>
-            
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden h-[70vh] flex flex-col">
-              <ChatInterface />
-            </div>
-            
-            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-start">
-                <AlertCircle className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
-                <div>
-                  <p className="text-sm text-blue-800 font-medium">Healthcare Disclaimer:</p>
-                  <p className="text-sm text-blue-700 mt-1">
-                    This healthcare assistant is for informational purposes only. The information provided is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
-                  </p>
-                  <p className="text-sm text-blue-700 mt-2">
-                    If you are experiencing a medical emergency, please call your local emergency services immediately or visit the nearest emergency room.
-                  </p>
-                </div>
               </div>
             </div>
           </div>
@@ -239,11 +218,19 @@ export default function Home() {
                 <p className="text-blue-100">Create an account to get personalized recommendations and save your health conversations.</p>
               </div>
               <div className="md:w-1/3 md:text-right">
-                <Link href="/auth/signup">
-                  <span className="inline-block px-6 py-3 border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">
-                    Sign Up Now
-                  </span>
-                </Link>
+                {user ? (
+                  <Link href="/chat">
+                    <span className="inline-block px-6 py-3 border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">
+                      Start Chatting
+                    </span>
+                  </Link>
+                ) : (
+                  <Link href="/auth/signup">
+                    <span className="inline-block px-6 py-3 border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">
+                      Sign Up Now
+                    </span>
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -268,29 +255,43 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Resources</h3>
               <ul className="mt-4 space-y-2">
                 <li><a href="#features" className="text-gray-400 hover:text-white">Health Topics</a></li>
-                <li><a href="#chat" className="text-gray-400 hover:text-white">Chat Assistant</a></li>
+                <li>
+                  <Link href={user ? "/chat" : "/auth/signin"} className="text-gray-400 hover:text-white">
+                    Chat Assistant
+                  </Link>
+                </li>
               </ul>
             </div>
             
             <div>
               <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Account</h3>
               <ul className="mt-4 space-y-2">
-                <li>
-                  <Link href="/auth/signin" className="text-gray-400 hover:text-white">
-                    Sign In
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/auth/signup" className="text-gray-400 hover:text-white">
-                    Create Account
-                  </Link>
-                </li>
-                {user && (
-                  <li>
-                    <Link href="/profile" className="text-gray-400 hover:text-white">
-                      My Profile
-                    </Link>
-                  </li>
+                {user ? (
+                  <>
+                    <li>
+                      <Link href="/profile" className="text-gray-400 hover:text-white">
+                        My Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/chat" className="text-gray-400 hover:text-white">
+                        My Conversations
+                      </Link>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li>
+                      <Link href="/auth/signin" className="text-gray-400 hover:text-white">
+                        Sign In
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/auth/signup" className="text-gray-400 hover:text-white">
+                        Create Account
+                      </Link>
+                    </li>
+                  </>
                 )}
               </ul>
             </div>

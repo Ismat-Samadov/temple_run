@@ -5,7 +5,6 @@ import type { NextRequest } from 'next/server';
 import { verifyToken } from './lib/jwt';
 import { initDatabase, testConnection } from './lib/db';
 
-
 // Initialize the database when the server starts
 // This is executed only once when the server initializes
 try {
