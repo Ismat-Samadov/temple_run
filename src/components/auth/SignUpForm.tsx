@@ -68,18 +68,16 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold text-center mb-6">Create Your Account</h2>
-      
+    <>
       {error && (
-        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+        <div className="bg-red-900/50 border-l-4 border-red-500 text-red-100 p-4 mb-6" role="alert">
           <p>{error}</p>
         </div>
       )}
       
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-indigo-100 mb-2">
             Full Name
           </label>
           <input
@@ -88,14 +86,14 @@ export default function SignUpForm() {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-gray-700/70 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white"
             placeholder="Enter your full name"
             required
           />
         </div>
         
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-indigo-100 mb-2">
             Email Address
           </label>
           <input
@@ -104,14 +102,14 @@ export default function SignUpForm() {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-gray-700/70 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white"
             placeholder="Enter your email"
             required
           />
         </div>
         
-        <div className="mb-4">
-          <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-indigo-100 mb-2">
             Password
           </label>
           <input
@@ -120,17 +118,17 @@ export default function SignUpForm() {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-gray-700/70 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white"
             placeholder="Create a password"
             required
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-indigo-300 mt-1">
             Password must be at least 6 characters long
           </p>
         </div>
         
-        <div className="mb-6">
-          <label htmlFor="confirmPassword" className="block text-gray-700 font-medium mb-2">
+        <div>
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-indigo-100 mb-2">
             Confirm Password
           </label>
           <input
@@ -139,7 +137,7 @@ export default function SignUpForm() {
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-gray-700/70 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white"
             placeholder="Confirm your password"
             required
           />
@@ -148,20 +146,20 @@ export default function SignUpForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-200 disabled:opacity-50"
+          className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition duration-200 disabled:opacity-50"
         >
           {loading ? 'Creating Account...' : 'Sign Up'}
         </button>
-      </form>
       
-      <div className="mt-6 text-center">
-        <p className="text-gray-600">
-          Already have an account?{' '}
-          <Link href="/auth/signin" className="text-blue-600 hover:underline">
-            Sign In
-          </Link>
-        </p>
-      </div>
-    </div>
+        <div className="mt-4 text-center">
+          <p className="text-indigo-200">
+            Already have an account?{' '}
+            <Link href="/auth/signin" className="text-indigo-300 hover:text-indigo-100 font-medium">
+              Sign In
+            </Link>
+          </p>
+        </div>
+      </form>
+    </>
   );
 }
