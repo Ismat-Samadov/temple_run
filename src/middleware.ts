@@ -1,14 +1,20 @@
+// src/middleware.ts
+export const runtime = 'nodejs'; // Use Node.js runtime for middleware
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifyToken } from './lib/jwt';
-import initializeDatabase from './lib/initDB';
+import { initDatabase, testConnection } from './lib/db';
+
 
 // Initialize the database when the server starts
 // This is executed only once when the server initializes
 try {
   console.log('Starting database initialization from middleware...');
-  initializeDatabase().catch(err => {
-    console.error('Failed to initialize database from middleware:', err);
+  Promise.all([
+    initDatabase(),
+    testConnection()
+  ]).catch(err => {
+    console.error('Database initialization error:', err);
   });
 } catch (error) {
   console.error('Error during database initialization in middleware:', error);

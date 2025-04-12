@@ -8,6 +8,8 @@ import { query } from './db';
  */
 export async function createUser(userData: SignUpData): Promise<User | null> {
   try {
+    console.log('Creating user with email:', userData.email);
+    
     // Check if email already exists
     const emailCheckResult = await query(
       'SELECT * FROM users WHERE email = $1',
@@ -15,6 +17,7 @@ export async function createUser(userData: SignUpData): Promise<User | null> {
     );
     
     if (emailCheckResult.rows.length > 0) {
+      console.log('Email already exists:', userData.email);
       return null; // Email already exists
     }
     
@@ -25,6 +28,8 @@ export async function createUser(userData: SignUpData): Promise<User | null> {
     // Generate UUID for the new user
     const userId = uuidv4();
     const now = new Date();
+    
+    console.log('Inserting new user with ID:', userId);
     
     // Insert the new user
     const result = await query(
@@ -42,6 +47,7 @@ export async function createUser(userData: SignUpData): Promise<User | null> {
     );
     
     if (result.rows.length > 0) {
+      console.log('User created successfully:', result.rows[0].email);
       // Convert the returned row to a User object
       return {
         id: result.rows[0].id,
@@ -52,13 +58,13 @@ export async function createUser(userData: SignUpData): Promise<User | null> {
       };
     }
     
+    console.log('User creation failed, no rows returned');
     return null;
   } catch (error) {
     console.error('Error creating user:', error);
     throw error;
   }
 }
-
 /**
  * Finds a user by their email
  */

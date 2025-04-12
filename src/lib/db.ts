@@ -1,3 +1,4 @@
+// src/lib/db.ts
 import { Pool } from 'pg';
 
 // Create a new pool instance using environment variables
@@ -7,7 +8,7 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  ssl: true
+  ssl: process.env.NODE_ENV === 'production' // Only use SSL in production
 });
 
 // Helper function to get a client from the pool
@@ -21,14 +22,19 @@ export const query = async (text: string, params?: any[]) => {
   const client = await pool.connect();
   try {
     return await client.query(text, params);
+  } catch (error) {
+    console.error('Database query error:', error);
+    throw error;
   } finally {
     client.release();
   }
 };
 
-// Helper function to create the users table if it doesn't exist
+// Helper function to create the necessary tables if they don't exist
 export const initDatabase = async () => {
   try {
+    console.log('Initializing database...');
+    
     // Create users table
     await query(`
       CREATE TABLE IF NOT EXISTS users (
@@ -56,10 +62,22 @@ export const initDatabase = async () => {
       );
     `);
     
-    console.log('Database initialized successfully');
+    console.log('Database tables created successfully');
   } catch (err) {
     console.error('Error initializing database:', err);
     throw err;
+  }
+};
+
+// Function to test the database connection
+export const testConnection = async () => {
+  try {
+    const result = await query('SELECT NOW()');
+    console.log('Database connection successful:', result.rows[0]);
+    return true;
+  } catch (error) {
+    console.error('Database connection failed:', error);
+    return false;
   }
 };
 
