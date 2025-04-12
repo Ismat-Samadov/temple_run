@@ -20,6 +20,19 @@ interface ErrorResponse {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Function to set a cookie
+const setCookie = (name: string, value: string, days: number = 7) => {
+  const date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = "; expires=" + date.toUTCString();
+  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+};
+
+// Function to delete a cookie
+const deleteCookie = (name: string) => {
+  document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -33,6 +46,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const token = localStorage.getItem('auth_token');
         
         if (token) {
+          // Set default Authorization header for all requests
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          
           const response = await axios.get('/api/auth/me', {
             headers: {
               Authorization: `Bearer ${token}`
@@ -46,6 +62,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (err) {
         console.error('Auth check error:', err);
         localStorage.removeItem('auth_token');
+        deleteCookie('auth_token');
+        axios.defaults.headers.common['Authorization'] = '';
       } finally {
         setLoading(false);
       }
@@ -63,7 +81,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const result = response.data;
       
       if (result.success && result.token) {
+        // Store token in both localStorage and as a cookie
         localStorage.setItem('auth_token', result.token);
+        setCookie('auth_token', result.token);
+        
+        // Set default Authorization header for all requests
+        axios.defaults.headers.common['Authorization'] = `Bearer ${result.token}`;
+        
         setUser(result.user);
       } else {
         setError(result.message || 'Sign in failed');
@@ -89,7 +113,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const result = response.data;
       
       if (result.success && result.token) {
+        // Store token in both localStorage and as a cookie
         localStorage.setItem('auth_token', result.token);
+        setCookie('auth_token', result.token);
+        
+        // Set default Authorization header for all requests
+        axios.defaults.headers.common['Authorization'] = `Bearer ${result.token}`;
+        
         setUser(result.user);
       } else {
         setError(result.message || 'Sign up failed');
@@ -108,6 +138,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = () => {
     localStorage.removeItem('auth_token');
+    deleteCookie('auth_token');
+    axios.defaults.headers.common['Authorization'] = '';
     setUser(null);
   };
 

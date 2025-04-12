@@ -38,8 +38,23 @@ export function middleware(request: NextRequest) {
   
   if (isProtectedRoute) {
     // Get the token from cookies or authorization header
-    const token = request.cookies.get('auth_token')?.value || 
-                 request.headers.get('Authorization')?.substring(7); // Remove 'Bearer ' prefix
+    const authHeader = request.headers.get('Authorization');
+    const cookieToken = request.cookies.get('auth_token')?.value;
+    
+    // Initially, look for "Authorization: Bearer <token>" in request headers
+    let token = null;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    } else if (cookieToken) {
+      // Fallback to check cookies
+      token = cookieToken;
+    } else {
+      // No token found - try to get from a custom header for client-side auth
+      const clientAuthHeader = request.headers.get('X-Auth-Token');
+      if (clientAuthHeader) {
+        token = clientAuthHeader;
+      }
+    }
     
     // If no token or invalid token, redirect to sign-in page
     if (!token || !verifyToken(token)) {

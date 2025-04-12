@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import { Message } from '@/types/chat';
 import { useAuth } from '@/context/AuthContext';
+import axios from 'axios';
 
 export default function ChatInterface() {
   const { user } = useAuth();
@@ -82,27 +83,13 @@ export default function ChatInterface() {
     setIsLoading(true);
     
     try {
-      // Get auth token if user is logged in
-      const token = localStorage.getItem('auth_token');
-      
-      // Send message to API
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify({ 
-          message: messageText,
-          userId: user?.id
-        }),
+      // Use axios with the already configured Authorization header
+      const response = await axios.post('/api/chat', { 
+        message: messageText,
+        userId: user?.id
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to get response');
-      }
-      
-      const data = await response.json();
+      const data = response.data;
       
       // Add AI response
       const aiMessage: Message = {
