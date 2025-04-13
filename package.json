@@ -7,9 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:init": "ts-node --transpile-only scripts/init-db.ts",
-    "db:update-users": "ts-node --transpile-only scripts/update-users-to-patients.ts",
-    "test:create-users": "ts-node --transpile-only scripts/test-user-creation.ts"
+    "db:generate-hash": "node scripts/generate-password-hash.js"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.1",
