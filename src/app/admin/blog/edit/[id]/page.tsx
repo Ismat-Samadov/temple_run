@@ -6,7 +6,13 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import BlogEditor from '@/components/admin/BlogEditor';
 
-export default function EditBlogPostPage({ params }: { params: { id: string } }) {
+interface EditBlogPostPageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function EditBlogPostPage({ params }: EditBlogPostPageProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
   const postId = params.id;

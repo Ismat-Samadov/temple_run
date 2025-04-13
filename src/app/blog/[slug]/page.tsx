@@ -7,7 +7,13 @@ import axios from 'axios';
 import { BlogPost } from '@/types/user';
 import BlogPostDetail from '@/components/blog/BlogPostDetail';
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
+interface BlogPostPageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export default function BlogPostPage({ params }: BlogPostPageProps) {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const router = useRouter();
