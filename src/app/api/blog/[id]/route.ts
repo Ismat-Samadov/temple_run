@@ -8,19 +8,12 @@ import {
   deleteBlogPost 
 } from '@/lib/blog-db';
 
-type RouteSegmentProps = {
-  params: {
-    id: string;
-  };
-};
+// Use the following format without fancy type annotations
 
 // Get a specific blog post
-export async function GET(
-  request: NextRequest,
-  props: RouteSegmentProps
-) {
+export async function GET(request: Request, context: { params: any }) {
   try {
-    const postId = props.params.id;
+    const postId = context.params.id;
     const blogPost = await getBlogPostById(postId);
     
     if (!blogPost) {
@@ -66,11 +59,10 @@ export async function GET(
 }
 
 // Update a blog post (admin only)
-export async function PUT(
-  request: NextRequest,
-  props: RouteSegmentProps
-) {
+export async function PUT(request: Request, context: { params: any }) {
   try {
+    const postId = context.params.id;
+    
     // Authenticate and check if user is admin
     const authHeader = request.headers.get('Authorization');
     
@@ -100,8 +92,6 @@ export async function PUT(
         { status: 403 }
       );
     }
-    
-    const postId = props.params.id;
     
     // Parse request body
     const body = await request.json();
@@ -137,11 +127,10 @@ export async function PUT(
 }
 
 // Delete a blog post (admin only)
-export async function DELETE(
-  request: NextRequest,
-  props: RouteSegmentProps
-) {
+export async function DELETE(request: Request, context: { params: any }) {
   try {
+    const postId = context.params.id;
+    
     // Authenticate and check if user is admin
     const authHeader = request.headers.get('Authorization');
     
@@ -171,8 +160,6 @@ export async function DELETE(
         { status: 403 }
       );
     }
-    
-    const postId = props.params.id;
     
     // Delete the blog post
     const success = await deleteBlogPost(decoded.id, postId);
