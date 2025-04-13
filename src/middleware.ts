@@ -1,24 +1,8 @@
 // src/middleware.ts
-export const runtime = 'nodejs'; // Use Node.js runtime for middleware
+// Using Edge Runtime (default for Next.js)
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifyToken } from './lib/jwt';
-import { testConnection } from './lib/db';
-import initializeDatabase from './lib/initDB';
-
-// Initialize the database when the server starts
-// This is executed only once when the server initializes
-try {
-  console.log('Starting database initialization from middleware...');
-  Promise.all([
-    initializeDatabase(),
-    testConnection()
-  ]).catch(err => {
-    console.error('Database initialization error:', err);
-  });
-} catch (error) {
-  console.error('Error during database initialization in middleware:', error);
-}
 
 // Add routes that should be protected here
 const PROTECTED_ROUTES = [

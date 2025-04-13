@@ -3,6 +3,12 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
+import { initializeApp } from './init';
+
+// Initialize the application (including database setup)
+initializeApp().catch(error => {
+  console.error('Failed to initialize app:', error);
+});
 
 const inter = Inter({ subsets: ['latin'] });
 
