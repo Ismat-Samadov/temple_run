@@ -1,9 +1,12 @@
-// src/app/api/admin/doctors/verify/route.ts
-import { NextResponse } from 'next/server';
+// Fix for src/app/api/admin/doctors/verify/route.ts
+// This route doesn't use dynamic parameters, but I'm updating it to use NextRequest
+// for consistency
+
+import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/jwt';
 import { isAdmin, verifyDoctorAccount } from '@/lib/user-db';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     // Authenticate and check if user is admin
     const authHeader = request.headers.get('Authorization');
