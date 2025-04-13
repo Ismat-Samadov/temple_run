@@ -1,5 +1,5 @@
 // src/app/api/blog/[id]/route.ts
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/jwt';
 import { isAdmin } from '@/lib/user-db';
 import { 
@@ -10,11 +10,11 @@ import {
 
 // Get a specific blog post
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
-    const postId = params.id;
+    const postId = context.params.id;
     const blogPost = await getBlogPostById(postId);
     
     if (!blogPost) {
@@ -61,8 +61,8 @@ export async function GET(
 
 // Update a blog post (admin only)
 export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
     // Authenticate and check if user is admin
@@ -95,7 +95,7 @@ export async function PUT(
       );
     }
     
-    const postId = params.id;
+    const postId = context.params.id;
     
     // Parse request body
     const body = await request.json();
@@ -132,8 +132,8 @@ export async function PUT(
 
 // Delete a blog post (admin only)
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
     // Authenticate and check if user is admin
@@ -166,7 +166,7 @@ export async function DELETE(
       );
     }
     
-    const postId = params.id;
+    const postId = context.params.id;
     
     // Delete the blog post
     const success = await deleteBlogPost(decoded.id, postId);
