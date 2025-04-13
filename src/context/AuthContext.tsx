@@ -13,6 +13,7 @@ interface AuthContextType {
   signOut: () => void;
   isDoctor: () => boolean;
   isPatient: () => boolean;
+  isAdmin: () => boolean; // Add this new function
 }
 
 // Define the structure of the error response from the API
@@ -239,11 +240,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return user?.role === 'patient';
   };
 
-  return (
-    <AuthContext.Provider value={{ user, loading, error, signIn, signUp, signOut, isDoctor, isPatient }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const isAdmin = () => {
+    return user?.role === 'admin';
+  };
+
+return (
+  <AuthContext.Provider value={{ user, loading, error, signIn, signUp, signOut, isDoctor, isPatient, isAdmin }}>
+    {children}
+  </AuthContext.Provider>
+);
 };
 
 export function useAuth() {

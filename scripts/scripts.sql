@@ -30,29 +30,48 @@ UPDATE users
 SET role = 'patient'
 WHERE role IS NULL OR role = '';
 
--- 5. Create test users (optional)
--- Create a test doctor user
-INSERT INTO users (
-  id, 
-  name, 
-  email, 
-  password, 
-  role, 
-  created_at, 
-  updated_at
-) 
-VALUES (
-  '11111111-1111-1111-1111-111111111111', -- Replace with a generated UUID if needed
-  'Test Doctor',
-  'doctor@example.com',
-  '$2a$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', -- Replace with your bcrypt hash
-  'doctor',
-  CURRENT_TIMESTAMP,
-  CURRENT_TIMESTAMP
-)
-ON CONFLICT (email) DO NOTHING;
 
--- Create a test patient user
+
+
+
+-- Update users table to allow admin role
+ALTER TABLE users 
+  DROP CONSTRAINT IF EXISTS check_role;
+
+ALTER TABLE users
+  ADD CONSTRAINT check_role CHECK (role IN ('patient', 'doctor', 'admin'));
+
+-- Create blog posts table
+CREATE TABLE IF NOT EXISTS blog_posts (
+  id UUID PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  summary TEXT NOT NULL,
+  author_id UUID NOT NULL REFERENCES users(id),
+  published_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  tags TEXT[] DEFAULT '{}',
+  is_published BOOLEAN DEFAULT false,
+  CONSTRAINT fk_author
+    FOREIGN KEY(author_id) 
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+-- Create index on slug for faster lookups
+CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
+
+-- SQL script to create an admin user
+-- Replace the values here with your desired admin credentials
+-- Note: In a real scenario, you would use a secure method to generate the password hash
+-- rather than storing it in plaintext in a SQL file
+
+-- Variables (these would be replaced with actual values)
+-- Admin UUID - should be a real UUID in production
+
+-- Simpler version without PL/pgSQL (if your database doesn't support it)
+-- This checks if the user exists, and if not, creates it
 INSERT INTO users (
   id, 
   name, 
@@ -62,13 +81,17 @@ INSERT INTO users (
   created_at, 
   updated_at
 ) 
-VALUES (
-  '22222222-2222-2222-2222-222222222222', -- Replace with a generated UUID if needed
-  'Test Patient',
-  'patient@example.com',
-  '$2a$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', -- Replace with your bcrypt hash
-  'patient',
-  CURRENT_TIMESTAMP,
-  CURRENT_TIMESTAMP
-)
-ON CONFLICT (email) DO NOTHING;
+SELECT 
+  '33333333-3333-3333-3333-333333333333', -- admin UUID
+  'System Administrator', -- name
+  'admin@healthcareassistant.com', -- email (will be converted to lowercase)
+  '$2a$10$XJ9Sdl4WgAwNFPD6kQ5QSu8h4mZxF1KNMrjuv.MAIm80TA5wrR7U6', -- hashed password for 'Admin123!'
+  'admin', -- role
+  CURRENT_TIMESTAMP, -- created_at
+  CURRENT_TIMESTAMP -- updated_at
+WHERE 
+  NOT EXISTS (
+    SELECT 1 FROM users WHERE email = 'admin@healthcareassistant.com'
+  )
+ON CONFLICT (email) DO 
+  UPDATE SET role = 'admin';

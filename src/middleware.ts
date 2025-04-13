@@ -12,6 +12,13 @@ const PROTECTED_ROUTES = [
   '/api/auth/me'
 ];
 
+// Routes that only admins can access
+const ADMIN_ONLY_ROUTES = [
+  '/admin',
+  '/admin/blog',
+  '/admin/doctors'
+];
+
 // Routes that only doctors can access
 const DOCTOR_ONLY_ROUTES = [
   '/doctor',
@@ -31,7 +38,12 @@ export function middleware(request: NextRequest) {
     pathname === route || pathname.startsWith(`${route}/`)
   );
   
-  if (isProtectedRoute || isDoctorRoute) {
+  // Check if the path is an admin-only route
+  const isAdminRoute = ADMIN_ONLY_ROUTES.some(route => 
+    pathname === route || pathname.startsWith(`${route}/`)
+  );
+  
+  if (isProtectedRoute || isDoctorRoute || isAdminRoute) {
     // Get the token from cookies
     const cookieToken = request.cookies.get('auth_token')?.value;
     
@@ -65,11 +77,15 @@ export function middleware(request: NextRequest) {
       }
       
       // For doctor-only routes, check the user's role
-      if (isDoctorRoute) {
-        if (decoded.role !== 'doctor') {
-          // Redirect non-doctors to home
-          return NextResponse.redirect(new URL('/', request.url));
-        }
+      if (isDoctorRoute && decoded.role !== 'doctor' && decoded.role !== 'admin') {
+        // Allow admins to access doctor routes, but redirect non-doctors/non-admins to home
+        return NextResponse.redirect(new URL('/', request.url));
+      }
+      
+      // For admin-only routes, check if the user is an admin
+      if (isAdminRoute && decoded.role !== 'admin') {
+        // Redirect non-admins to home
+        return NextResponse.redirect(new URL('/', request.url));
       }
       
       // Create a new response
@@ -119,5 +135,7 @@ export const config = {
     // - auth routes (allow unauthenticated access)
     '/((?!_next/static|_next/image|favicon.ico|public|auth).*)',
     '/api/chat/:path*',
+    '/api/blog/:path*',
+    '/api/admin/:path*',
   ],
 };
