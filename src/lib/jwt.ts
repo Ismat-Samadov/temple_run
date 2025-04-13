@@ -7,12 +7,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'healthcare-app-secret-key';
 interface JwtPayload {
   id: string;
   email: string;
+  role?: 'doctor' | 'patient'; // Add role to the payload
 }
 
 export function generateToken(user: User): string {
   // Create a token that expires in 7 days
   return jwt.sign(
-    { id: user.id, email: user.email },
+    { id: user.id, email: user.email, role: user.role }, // Include role in the token
     JWT_SECRET,
     { expiresIn: '7d' }
   );
@@ -21,8 +22,9 @@ export function generateToken(user: User): string {
 export function verifyToken(token: string): JwtPayload | null {
   try {
     return jwt.verify(token, JWT_SECRET) as JwtPayload;
-  } catch {
+  } catch (error) {
     // Ignore the error and return null for invalid tokens
+    console.error('JWT verification error:', error);
     return null;
   }
 }
