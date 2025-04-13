@@ -2,10 +2,11 @@
 
 A Next.js-based healthcare chatbot application that provides health information and guidance to users. This chatbot can answer questions about common health issues, provide general medical information, and guide users toward appropriate healthcare resources.
 
-## Features
+## 🌟 Features
 
 - **Modern Tech Stack**: Built with Next.js 15, React 19, TypeScript, and Tailwind CSS
 - **Interactive Chat Interface**: Real-time conversation with intelligent health assistant
+- **Role-Based Access**: Separate interfaces for patients and healthcare providers
 - **Personalized Responses**: Tailored answers based on user context and history
 - **User Authentication System**: Complete signup, signin, and profile management
 - **PostgreSQL Database Integration**: Secure storage of user data and chat history
@@ -17,7 +18,7 @@ A Next.js-based healthcare chatbot application that provides health information 
 - **Protected Routes**: Middleware-based route protection
 - **Animated UI Components**: Modern, visually appealing interface
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -72,11 +73,11 @@ A Next.js-based healthcare chatbot application that provides health information 
 
 6. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-## Project Structure
+## 🏗️ Project Structure
 
 ```
 intelligent-healthcare/
-├── public/                # Static assets
+├── public/                # Static assets (SVG icons)
 ├── src/
 │   ├── app/               # Next.js App Router
 │   │   ├── api/           # API routes
@@ -86,6 +87,8 @@ intelligent-healthcare/
 │   │   │   ├── signin/    # Sign in page
 │   │   │   └── signup/    # Sign up page
 │   │   ├── chat/          # Chat interface page
+│   │   ├── doctor/        # Doctor-specific pages
+│   │   │   └── dashboard/ # Doctor dashboard
 │   │   ├── profile/       # User profile page
 │   │   ├── privacy/       # Privacy policy page
 │   │   ├── terms/         # Terms of service page
@@ -95,6 +98,8 @@ intelligent-healthcare/
 │   │   ├── auth/          # Authentication components
 │   │   │   ├── SignInForm.tsx
 │   │   │   └── SignUpForm.tsx
+│   │   ├── doctor/        # Doctor-specific components
+│   │   │   └── DoctorDashboard.tsx
 │   │   ├── ChatInterface.tsx   # Chat UI component
 │   │   ├── ChatMessage.tsx     # Individual message component
 │   │   ├── Navbar.tsx          # Navigation component
@@ -105,6 +110,7 @@ intelligent-healthcare/
 │   ├── lib/               # Utility functions
 │   │   ├── chatbot.ts     # Chatbot logic
 │   │   ├── db.ts          # Database connection
+│   │   ├── edge-jwt.ts    # Edge-compatible JWT utilities
 │   │   ├── jwt.ts         # JWT utilities
 │   │   └── user-db.ts     # User database operations
 │   ├── middleware.ts      # Next.js middleware for auth protection
@@ -112,23 +118,24 @@ intelligent-healthcare/
 │       ├── chat.ts        # Chat-related types
 │       └── user.ts        # User-related types
 ├── scripts/               # Utility scripts
-│   └── init-db.ts         # Database initialization script
+│   └── scripts.sql        # Database initialization SQL
 ├── .env.local             # Environment variables (create this file)
 └── package.json
 ```
 
-## Authentication System
+## 🔐 Authentication System
 
 The application uses a JWT-based authentication system:
 
-- **Sign Up**: Users can create a new account with name, email, and password
+- **Sign Up**: Users can create a new account with name, email, password, and role (patient or doctor)
 - **Sign In**: Existing users can sign in with email and password
 - **Protected Routes**: Middleware automatically protects routes that require authentication
+- **Role-Based Access**: Doctor-specific routes are protected from regular users
 - **User Profile**: Authenticated users can access their profile information
 - **Token Storage**: Authentication tokens are stored in both localStorage and cookies
 - **JWT Verification**: Server-side verification of tokens for protected routes
 
-## Chat Features
+## 💬 Chat Features
 
 - **Healthcare Knowledge Base**: Built-in responses for common health topics
 - **Context-Aware Suggestions**: Dynamically updated chat suggestions based on conversation
@@ -137,15 +144,32 @@ The application uses a JWT-based authentication system:
 - **OpenAI Integration**: Advanced AI responses when built-in knowledge is insufficient
 - **Health Disclaimers**: Clear healthcare disclaimers to ensure proper use
 
-## Database Integration
+## 🧠 AI Integration
+
+The chatbot uses a combination of:
+
+1. **Built-in Knowledge Base**: For fast responses to common health questions
+2. **OpenAI API**: For more complex or nuanced health inquiries
+3. **Personalization Layer**: Adapts responses based on user context and history
+
+## 💽 Database Integration
 
 The application uses PostgreSQL for data storage:
 
 - **User Management**: Securely stores user information with encrypted passwords
+- **Role-Based System**: Distinguishes between patients and healthcare providers
 - **Chat History**: Logs conversation history for authenticated users
 - **Connection Pool**: Efficient connection management for database operations
 
-## Extending the Chatbot
+## 🚑 Healthcare Provider Features
+
+For users with the "doctor" role:
+
+- **Doctor Dashboard**: Overview of patient statistics and activities
+- **Provider Portal**: Centralized access to healthcare provider tools
+- **Role-Based UI**: Special navigation options and features
+
+## ✏️ Extending the Chatbot
 
 ### Adding More Health Topics
 
@@ -170,10 +194,10 @@ To implement a production-ready authentication system:
 
 The chat interface and authentication forms can be customized by editing the components in the `src/components` directory. The application uses Tailwind CSS for styling.
 
-## Health Information Disclaimer
+## ⚠️ Health Information Disclaimer
 
 This healthcare chatbot is intended for informational purposes only and should not be used as a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
 
-## License
+## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
