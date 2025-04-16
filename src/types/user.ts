@@ -36,6 +36,7 @@ export interface BlogPost {
   slug: string;
   content: string;
   summary: string;
+  imageUrl?: string;
   authorId: string;
   authorName: string;
   tags: string[];
@@ -48,6 +49,7 @@ export interface BlogPostInput {
   title: string;
   content: string;
   summary: string;
+  imageUrl?: string; // Added image URL field
   tags: string[];
   isPublished: boolean;
 }
