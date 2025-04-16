@@ -95,3 +95,29 @@ WHERE
   )
 ON CONFLICT (email) DO 
   UPDATE SET role = 'admin';
+
+
+
+-- Create blog_posts table if it doesn't exist
+CREATE TABLE IF NOT EXISTS blog_posts (
+  id UUID PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  summary TEXT NOT NULL,
+  author_id UUID NOT NULL REFERENCES users(id),
+  published_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  tags TEXT[] DEFAULT '{}',
+  is_published BOOLEAN DEFAULT false,
+  CONSTRAINT fk_author
+    FOREIGN KEY(author_id) 
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+-- Create index on slug for faster lookups
+CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
+
+-- Add image_url column to blog_posts table if it doesn't exist
+ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS image_url TEXT;

@@ -8,8 +8,6 @@ import {
   deleteBlogPost 
 } from '@/lib/blog-db';
 
-// Use the following format without fancy type annotations
-
 // Get a specific blog post
 export async function GET(request: Request, context: { params: any }) {
   try {
@@ -96,11 +94,12 @@ export async function PUT(request: Request, context: { params: any }) {
     // Parse request body
     const body = await request.json();
     
-    // Update the blog post
+    // Update the blog post - FIXED: Include imageUrl field
     const updatedPost = await updateBlogPost(decoded.id, postId, {
       title: body.title,
       content: body.content,
       summary: body.summary,
+      imageUrl: body.imageUrl, // Added this line to include the imageUrl
       tags: body.tags,
       isPublished: body.isPublished
     });

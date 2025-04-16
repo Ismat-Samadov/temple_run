@@ -1,3 +1,4 @@
+// src/components/blog/BlogList.tsx - Enhanced version
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -10,7 +11,8 @@ export default function BlogList() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { user, isDoctor } = useAuth();
+  const [imageErrors, setImageErrors] = useState<{[key: string]: boolean}>({});
+  const { user } = useAuth();
   const isUserAdmin = user?.role === 'admin';
 
   useEffect(() => {
@@ -29,6 +31,14 @@ export default function BlogList() {
 
     fetchPosts();
   }, []);
+
+  // Handle image loading errors
+  const handleImageError = (postId: string) => {
+    setImageErrors(prev => ({
+      ...prev,
+      [postId]: true
+    }));
+  };
 
   if (loading) {
     return (
@@ -55,7 +65,7 @@ export default function BlogList() {
   if (posts.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">No blog posts found.</p>
+        <p className="text-indigo-300">No blog posts found.</p>
         {isUserAdmin && (
           <Link 
             href="/admin/blog/new" 
@@ -84,8 +94,8 @@ export default function BlogList() {
       {posts.map((post) => (
         <div key={post.id} className="bg-gray-800/60 backdrop-blur-sm border border-gray-700 rounded-lg overflow-hidden shadow-lg">
           <div className="md:flex">
-            {/* Featured image (if present) */}
-            {post.imageUrl && (
+            {/* Featured image (if present) - ENHANCED for better error handling */}
+            {post.imageUrl && !imageErrors[post.id] && (
               <div className="md:flex-shrink-0 md:w-1/3 h-64 md:h-auto">
                 <Link href={`/blog/${post.slug}`}>
                   <div className="h-full w-full relative">
@@ -94,11 +104,8 @@ export default function BlogList() {
                       src={post.imageUrl}
                       alt={post.title}
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.onerror = null;
-                        target.src = '/placeholder-image.jpg'; // Fallback image
-                      }}
+                      onError={() => handleImageError(post.id)}
+                      loading="lazy"
                     />
                   </div>
                 </Link>
@@ -106,7 +113,7 @@ export default function BlogList() {
             )}
 
             {/* Content section */}
-            <div className={`p-6 ${post.imageUrl ? 'md:w-2/3' : 'w-full'}`}>
+            <div className={`p-6 ${post.imageUrl && !imageErrors[post.id] ? 'md:w-2/3' : 'w-full'}`}>
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-2xl font-bold text-indigo-100 mb-2">
@@ -140,6 +147,14 @@ export default function BlogList() {
                     >
                       Edit
                     </Link>
+                    {isUserAdmin && post.imageUrl && (
+                      <div className="ml-2 text-xs text-indigo-400 mt-1">
+                        {imageErrors[post.id] ? 
+                          <span className="text-yellow-400">Image error</span> : 
+                          <span>✓ Image</span>
+                        }
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

@@ -1,3 +1,4 @@
+// src/components/blog/BlogPostDetail.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -15,6 +16,7 @@ export default function BlogPostDetail({ slug }: BlogPostProps) {
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
   const isUserAdmin = user?.role === 'admin';
@@ -31,6 +33,8 @@ export default function BlogPostDetail({ slug }: BlogPostProps) {
         
         if (foundPost) {
           setPost(foundPost);
+          // Reset image error state when loading a new post
+          setImageError(false);
         } else {
           setError('Blog post not found');
         }
@@ -63,6 +67,11 @@ export default function BlogPostDetail({ slug }: BlogPostProps) {
   const formatContent = (content: string) => {
     // Add 'blog-image' class to all images in the content
     return content.replace(/<img /g, '<img class="blog-image" ');
+  };
+
+  // Function to handle image load errors
+  const handleImageError = () => {
+    setImageError(true);
   };
 
   if (loading) {
@@ -106,19 +115,15 @@ export default function BlogPostDetail({ slug }: BlogPostProps) {
       </Link>
       
       <div className="bg-gray-800/60 backdrop-blur-sm border border-gray-700 rounded-lg overflow-hidden shadow-lg">
-        {/* Featured image */}
-        {post.imageUrl && (
+        {/* Featured image - ENHANCED: better error handling and fallback */}
+        {post.imageUrl && !imageError && (
           <div className="w-full h-72 md:h-96 relative">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
               src={post.imageUrl}
               alt={post.title}
               className="w-full h-full object-cover"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.onerror = null;
-                target.style.display = 'none';
-              }}
+              onError={handleImageError}
             />
           </div>
         )}
@@ -160,6 +165,14 @@ export default function BlogPostDetail({ slug }: BlogPostProps) {
                 >
                   Delete
                 </button>
+                {post.imageUrl && (
+                  <div className="ml-4 text-xs text-indigo-300">
+                    {imageError ? 
+                      <span className="text-yellow-400">Image failed to load</span> : 
+                      <span>Image URL: {post.imageUrl.substring(0, 30)}...</span>
+                    }
+                  </div>
+                )}
               </div>
             )}
           </header>

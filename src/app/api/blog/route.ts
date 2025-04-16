@@ -82,11 +82,12 @@ export async function POST(request: Request) {
       );
     }
     
-    // Create the blog post
+    // Create the blog post - FIXED: Include imageUrl field
     const blogPost = await createBlogPost(decoded.id, {
       title: body.title,
       content: body.content,
       summary: body.summary || body.title,
+      imageUrl: body.imageUrl, // Added this line to include the imageUrl
       tags: body.tags || [],
       isPublished: body.isPublished || false
     });
