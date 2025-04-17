@@ -1,12 +1,13 @@
+// src/components/admin/BlogEditor.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 import { BlogPostInput } from '@/types/user';
+import EnhancedRichTextEditor from '../EnhancedRichTextEditor';
 
 interface BlogEditorProps {
   postId?: string; // If provided, we're editing an existing post
@@ -31,6 +32,7 @@ export default function BlogEditor({ postId }: BlogEditorProps) {
   const [error, setError] = useState<string | null>(null);
   const [initialLoading, setInitialLoading] = useState(isEditing);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [previewMode, setPreviewMode] = useState(false);
 
   // Check if user is admin
   useEffect(() => {
@@ -86,6 +88,10 @@ export default function BlogEditor({ postId }: BlogEditorProps) {
     } else if (name === 'imageUrl' && !value) {
       setImagePreview(null);
     }
+  };
+
+  const handleEditorChange = (content: string) => {
+    setFormData(prev => ({ ...prev, content }));
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -266,24 +272,41 @@ export default function BlogEditor({ postId }: BlogEditorProps) {
         </div>
         
         <div className="mb-6">
-          <label htmlFor="content" className="block text-sm font-medium text-indigo-200 mb-2">
-            Content *
-          </label>
-          <textarea
-            id="content"
-            name="content"
-            value={formData.content}
-            onChange={handleChange}
-            rows={15}
-            className="w-full px-4 py-2 bg-gray-700/70 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white"
-            placeholder="Write your post content here (supports HTML formatting)"
-            required
-          ></textarea>
+          <div className="flex justify-between items-center mb-2">
+            <label className="block text-sm font-medium text-indigo-200">
+              Content *
+            </label>
+            <div className="flex space-x-2">
+              <button 
+                type="button"
+                onClick={() => setPreviewMode(false)} 
+                className={`px-3 py-1 text-sm rounded ${!previewMode ? 'bg-indigo-600 text-white' : 'bg-gray-700 text-indigo-300'}`}
+              >
+                Edit
+              </button>
+              <button 
+                type="button"
+                onClick={() => setPreviewMode(true)} 
+                className={`px-3 py-1 text-sm rounded ${previewMode ? 'bg-indigo-600 text-white' : 'bg-gray-700 text-indigo-300'}`}
+              >
+                Preview
+              </button>
+            </div>
+          </div>
+          
+          {previewMode ? (
+            <div className="w-full min-h-[400px] bg-gray-700/70 border border-gray-600 rounded-lg p-6 prose prose-invert max-w-none blog-content">
+              <div dangerouslySetInnerHTML={{ __html: formData.content }} />
+            </div>
+          ) : (
+            <EnhancedRichTextEditor 
+              initialValue={formData.content} 
+              onChange={handleEditorChange} 
+              placeholder="Write your post content here..."
+            />
+          )}
           <p className="mt-2 text-xs text-indigo-300">
-            HTML formatting is supported. Use &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, etc. for formatting.
-          </p>
-          <p className="mt-1 text-xs text-indigo-300">
-            To embed images in the content, use HTML: &lt;img src="https://example.com/image.jpg" alt="Description" class="blog-image" /&gt;
+            Use the formatting toolbar to style your content, add links, images, and more.
           </p>
         </div>
         

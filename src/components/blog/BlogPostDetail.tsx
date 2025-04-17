@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 import { BlogPost } from '@/types/user';
+import { formatBlogContent, getReadingTime, generateTableOfContents } from '@/utils/blogFormatter';
+import { Clock, Calendar, Tag, User, Edit, Trash2, Share2 } from 'lucide-react';
 
 interface BlogPostProps {
   slug: string;
@@ -17,6 +19,9 @@ export default function BlogPostDetail({ slug }: BlogPostProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
+  const [formattedContent, setFormattedContent] = useState<string>('');
+  const [showToc, setShowToc] = useState(false);
+  const [tableOfContents, setTableOfContents] = useState<Array<{id: string, title: string, level: number}>>([]);
   const { user } = useAuth();
   const router = useRouter();
   const isUserAdmin = user?.role === 'admin';
@@ -33,6 +38,15 @@ export default function BlogPostDetail({ slug }: BlogPostProps) {
         
         if (foundPost) {
           setPost(foundPost);
+          
+          // Format the content with our utility
+          const enhanced = formatBlogContent(foundPost.content);
+          setFormattedContent(enhanced);
+          
+          // Generate table of contents
+          const toc = generateTableOfContents(enhanced);
+          setTableOfContents(toc);
+          
           // Reset image error state when loading a new post
           setImageError(false);
         } else {
@@ -63,10 +77,23 @@ export default function BlogPostDetail({ slug }: BlogPostProps) {
     }
   };
 
-  // Function to format the HTML content - add custom classes to images
-  const formatContent = (content: string) => {
-    // Add 'blog-image' class to all images in the content
-    return content.replace(/<img /g, '<img class="blog-image" ');
+  // Function to handle sharing
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: post?.title || 'Blog Post',
+          text: post?.summary || 'Check out this blog post',
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      // Fallback for browsers that don't support navigator.share
+      navigator.clipboard.writeText(window.location.href);
+      alert('URL copied to clipboard!');
+    }
   };
 
   // Function to handle image load errors
@@ -74,13 +101,24 @@ export default function BlogPostDetail({ slug }: BlogPostProps) {
     setImageError(true);
   };
 
+  // Toggle table of contents
+  const toggleToc = () => {
+    setShowToc(!showToc);
+  };
+
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12">
-        <div className="animate-pulse flex space-x-2">
-          <div className="h-3 w-3 bg-indigo-400 rounded-full"></div>
-          <div className="h-3 w-3 bg-indigo-400 rounded-full"></div>
-          <div className="h-3 w-3 bg-indigo-400 rounded-full"></div>
+      <div className="max-w-4xl mx-auto py-12 px-4">
+        <div className="animate-pulse">
+          <div className="h-10 bg-gray-700 rounded w-3/4 mb-8"></div>
+          <div className="h-6 bg-gray-700 rounded w-1/2 mb-10"></div>
+          <div className="h-96 bg-gray-700 rounded mb-8"></div>
+          <div className="space-y-4">
+            <div className="h-4 bg-gray-700 rounded w-full"></div>
+            <div className="h-4 bg-gray-700 rounded w-5/6"></div>
+            <div className="h-4 bg-gray-700 rounded w-full"></div>
+            <div className="h-4 bg-gray-700 rounded w-3/4"></div>
+          </div>
         </div>
       </div>
     );
@@ -89,7 +127,7 @@ export default function BlogPostDetail({ slug }: BlogPostProps) {
   if (error || !post) {
     return (
       <div className="text-center py-12">
-        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg">
+        <div className="bg-red-900/50 border-l-4 border-red-500 text-red-100 p-4 rounded-lg">
           <p>{error || 'Blog post not found'}</p>
         </div>
         <Link 
@@ -138,45 +176,153 @@ export default function BlogPostDetail({ slug }: BlogPostProps) {
           <header className="mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-indigo-100 mb-4">{post.title}</h1>
             
-            <div className="flex flex-wrap items-center text-sm text-indigo-300 mb-4">
-              <span>By {post.authorName}</span>
-              <span className="mx-2">•</span>
-              <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+            <div className="flex flex-wrap items-center text-sm text-indigo-300 mb-6 gap-4">
+              <div className="flex items-center">
+                <User size={16} className="mr-1" />
+                <span>{post.authorName}</span>
+              </div>
+
+              <div className="flex items-center">
+                <Calendar size={16} className="mr-1" />
+                <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+              </div>
+
+              <div className="flex items-center">
+                <Clock size={16} className="mr-1" />
+                <span>{getReadingTime(post.content)} min read</span>
+              </div>
               
               {post.tags && post.tags.length > 0 && (
-                <>
-                  <span className="mx-2">•</span>
-                  <div className="flex flex-wrap gap-2">
-                    {post.tags.map((tag, index) => (
-                      <span key={index} className="bg-indigo-900/60 px-2 py-1 rounded-full text-xs">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </>
+                <div className="flex items-center flex-wrap gap-2">
+                  <Tag size={16} className="mr-1" />
+                  {post.tags.map((tag, index) => (
+                    <span key={index} className="bg-indigo-900/60 px-2 py-1 rounded-full text-xs">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               )}
             </div>
             
-            {isUserAdmin && (
-              <div className="flex space-x-3 mt-4">
-                <Link 
-                  href={`/admin/blog/edit/${post.id}`}
-                  className="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700"
-                >
-                  Edit Post
-                </Link>
+            <div className="flex items-center justify-between">
+              {tableOfContents.length > 0 && (
                 <button 
-                  onClick={handleDelete}
-                  className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                  onClick={toggleToc}
+                  className="text-indigo-400 text-sm hover:text-indigo-300 flex items-center"
                 >
-                  Delete
+                  {showToc ? 'Hide Table of Contents' : 'Show Table of Contents'}
                 </button>
+              )}
+              
+              <div className="flex space-x-3">
+                {isUserAdmin && (
+                  <>
+                    <Link 
+                      href={`/admin/blog/edit/${post.id}`}
+                      className="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700 flex items-center"
+                    >
+                      <Edit size={16} className="mr-1" />
+                      Edit
+                    </Link>
+                    <button 
+                      onClick={handleDelete}
+                      className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 flex items-center"
+                    >
+                      <Trash2 size={16} className="mr-1" />
+                      Delete
+                    </button>
+                  </>
+                )}
+                <button 
+                  onClick={handleShare}
+                  className="bg-gray-700 text-white px-3 py-1 rounded text-sm hover:bg-gray-600 flex items-center"
+                >
+                  <Share2 size={16} className="mr-1" />
+                  Share
+                </button>
+              </div>
+            </div>
+            
+            {/* Table of Contents */}
+            {showToc && tableOfContents.length > 0 && (
+              <div className="mt-6 p-4 bg-gray-700/50 rounded-lg border border-gray-600">
+                <h3 className="text-lg font-medium text-indigo-200 mb-2">Table of Contents</h3>
+                <ul className="space-y-1">
+                  {tableOfContents.map((item, index) => (
+                    <li 
+                      key={index} 
+                      className="text-indigo-300 hover:text-indigo-100"
+                      style={{ paddingLeft: `${(item.level - 2) * 1}rem` }}
+                    >
+                      <a href={`#${item.id}`} className="hover:underline">
+                        {item.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </header>
           
-          <div className="prose prose-invert max-w-none prose-indigo prose-lg blog-content">
-            <div dangerouslySetInnerHTML={{ __html: formatContent(post.content) }} />
+          {/* Display formatted content */}
+          <div className="prose prose-invert max-w-none prose-indigo prose-lg blog-content blog-layout">
+            <div dangerouslySetInnerHTML={{ __html: formattedContent }} />
+          </div>
+          
+          {/* Author Info */}
+          <div className="mt-12 pt-8 border-t border-gray-700">
+            <div className="flex items-start gap-4">
+              <div className="bg-gray-700 rounded-full h-16 w-16 flex items-center justify-center text-xl font-bold text-indigo-300">
+                {post.authorName.charAt(0)}
+              </div>
+              <div>
+                <h3 className="text-lg font-medium text-indigo-100">{post.authorName}</h3>
+                <p className="text-indigo-300 mt-1 text-sm">
+                  Healthcare content creator with expertise in medical information and health education.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Tags Section */}
+          {post.tags && post.tags.length > 0 && (
+            <div className="mt-8 pt-6 border-t border-gray-700">
+              <h3 className="text-lg font-medium text-indigo-200 mb-2">Related Topics</h3>
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((tag, index) => (
+                  <Link 
+                    key={index} 
+                    href={`/blog?tag=${encodeURIComponent(tag)}`}
+                    className="bg-indigo-900/40 hover:bg-indigo-800/60 px-3 py-1.5 rounded-full text-sm text-indigo-300 hover:text-indigo-200 transition"
+                  >
+                    {tag}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Read More Section - Placeholder for related posts */}
+          <div className="mt-12 pt-8 border-t border-gray-700">
+            <h3 className="text-xl font-bold text-indigo-100 mb-6">More Articles</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-gray-800/40 rounded-lg p-4 hover:bg-gray-700/40 transition cursor-pointer">
+                <h4 className="text-lg font-medium text-indigo-200">
+                  Tips for Maintaining Heart Health
+                </h4>
+                <p className="text-sm text-indigo-300 mt-2 line-clamp-2">
+                  Learn about the best practices for keeping your heart healthy through diet, exercise, and lifestyle changes.
+                </p>
+              </div>
+              <div className="bg-gray-800/40 rounded-lg p-4 hover:bg-gray-700/40 transition cursor-pointer">
+                <h4 className="text-lg font-medium text-indigo-200">
+                  Understanding Mental Health
+                </h4>
+                <p className="text-sm text-indigo-300 mt-2 line-clamp-2">
+                  Explore the fundamentals of mental health and discover strategies for maintaining psychological wellbeing.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
