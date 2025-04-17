@@ -1,15 +1,14 @@
-// src/components/TermsOfService.tsx
 'use client';
 
 import Link from 'next/link';
 
 export default function TermsOfService() {
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-950 to-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto bg-gray-800/60 backdrop-blur-sm p-8 rounded-lg shadow border border-gray-700">
         <Link 
           href="/" 
-          className="text-blue-600 hover:text-blue-800 inline-flex items-center mb-6"
+          className="text-blue-400 hover:text-blue-300 inline-flex items-center mb-6"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
@@ -17,11 +16,11 @@ export default function TermsOfService() {
           Back to Home
         </Link>
         
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Terms of Service</h1>
+        <h1 className="text-3xl font-bold text-indigo-100 mb-6">Terms of Service</h1>
         
-        <div className="space-y-6 text-gray-700">
+        <div className="space-y-6 text-indigo-200">
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">1. Acceptance of Terms</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">1. Acceptance of Terms</h2>
             <p>
               By accessing or using the Healthcare Assistant application (&ldquo;Application&rdquo;), you agree to be bound by these Terms of Service (&ldquo;Terms&rdquo;). If you do not agree to these Terms, please do not use the Application.
             </p>
@@ -31,7 +30,7 @@ export default function TermsOfService() {
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">2. Healthcare Disclaimer</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">2. Healthcare Disclaimer</h2>
             <p>
               <strong>NOT MEDICAL ADVICE:</strong> The information provided through the Application is for informational and educational purposes only. It is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Never disregard professional medical advice or delay seeking it because of something you have read or heard on the Application.
             </p>
@@ -44,7 +43,7 @@ export default function TermsOfService() {
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">3. Account Registration</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">3. Account Registration</h2>
             <p>
               To access certain features of the Application, you may be required to register for an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete.
             </p>
@@ -54,13 +53,13 @@ export default function TermsOfService() {
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">4. Use of the Application</h2>
-            <h3 className="text-lg font-medium text-gray-800 mb-2">4.1 Permitted Use</h3>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">4. Use of the Application</h2>
+            <h3 className="text-lg font-medium text-indigo-100 mb-2">4.1 Permitted Use</h3>
             <p>
               Subject to these Terms, we grant you a limited, non-exclusive, non-transferable, and revocable license to access and use the Application for your personal, non-commercial use.
             </p>
             
-            <h3 className="text-lg font-medium text-gray-800 mb-2 mt-4">4.2 Prohibited Conduct</h3>
+            <h3 className="text-lg font-medium text-indigo-100 mb-2 mt-4">4.2 Prohibited Conduct</h3>
             <p>
               You agree not to:
             </p>
@@ -79,14 +78,14 @@ export default function TermsOfService() {
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">5. Intellectual Property Rights</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">5. Intellectual Property Rights</h2>
             <p>
               The Application and its entire contents, features, and functionality (including but not limited to all information, software, text, displays, images, and the design, selection, and arrangement thereof) are owned by Healthcare Assistant, its licensors, or other providers of such material and are protected by copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.
             </p>
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">6. User Content</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">6. User Content</h2>
             <p>
               &ldquo;User Content&rdquo; means any information, data, text, or other materials that users submit to the Application. You retain all rights to your User Content, but you grant us a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use, copy, modify, create derivative works based on, distribute, publicly display, and otherwise exploit your User Content in connection with operating and providing the Application.
             </p>
@@ -101,56 +100,56 @@ export default function TermsOfService() {
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">7. Third-Party Links and Content</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">7. Third-Party Links and Content</h2>
             <p>
               The Application may contain links to third-party websites or resources. We provide these links only as a convenience and are not responsible for the content, products, or services on or available from those websites or resources. You acknowledge and agree that we are not responsible or liable for any damage or loss caused by or in connection with your use of any third-party websites or resources.
             </p>
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">8. Termination</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">8. Termination</h2>
             <p>
               We may terminate or suspend your access to the Application immediately, without prior notice or liability, for any reason, including if you breach these Terms. Upon termination, your right to use the Application will immediately cease.
             </p>
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">9. Disclaimer of Warranties</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">9. Disclaimer of Warranties</h2>
             <p>
               THE APPLICATION IS PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS AVAILABLE&rdquo; WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE APPLICATION WILL BE UNINTERRUPTED OR ERROR-FREE, THAT DEFECTS WILL BE CORRECTED, OR THAT THE APPLICATION IS FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS.
             </p>
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">10. Limitation of Liability</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">10. Limitation of Liability</h2>
             <p>
               IN NO EVENT SHALL WE, OUR DIRECTORS, EMPLOYEES, PARTNERS, AGENTS, SUPPLIERS, OR AFFILIATES BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING WITHOUT LIMITATION, LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES, RESULTING FROM YOUR ACCESS TO OR USE OF OR INABILITY TO ACCESS OR USE THE APPLICATION.
             </p>
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">11. Indemnification</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">11. Indemnification</h2>
             <p>
               You agree to indemnify, defend, and hold harmless Healthcare Assistant and its officers, directors, employees, agents, and affiliates from and against any and all claims, liabilities, damages, losses, costs, expenses, or fees (including reasonable attorneys&apos; fees) that arise from or relate to your use of the Application or violation of these Terms.
             </p>
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">12. Governing Law</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">12. Governing Law</h2>
             <p>
               These Terms shall be governed by and construed in accordance with the laws of the state of California, without regard to its conflict of law provisions.
             </p>
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">13. Changes to Terms</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">13. Changes to Terms</h2>
             <p>
               We reserve the right to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days&apos; notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.
             </p>
           </section>
           
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">14. Contact Information</h2>
+            <h2 className="text-xl font-semibold text-indigo-100 mb-3">14. Contact Information</h2>
             <p>
               If you have any questions about these Terms, please contact us at:
             </p>
@@ -162,7 +161,7 @@ export default function TermsOfService() {
             </p>
           </section>
           
-          <p className="mt-6 text-sm text-gray-500">Last Updated: April 11, 2025</p>
+          <p className="mt-6 text-sm text-indigo-400">Last Updated: April 11, 2025</p>
         </div>
       </div>
     </div>
