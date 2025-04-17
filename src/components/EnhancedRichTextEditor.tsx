@@ -1,9 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, ListOrdered, Link, Image, Type, Quote, Code } from 'lucide-react';
 
-const EnhancedRichTextEditor = ({ initialValue = '', onChange, placeholder = 'Write your content here...' }) => {
-  const editorRef = useRef(null);
-  const [html, setHtml] = useState(initialValue);
+interface EnhancedRichTextEditorProps {
+  initialValue?: string;
+  onChange: (content: string) => void;
+  placeholder?: string;
+}
+
+const EnhancedRichTextEditor: React.FC<EnhancedRichTextEditorProps> = ({ 
+  initialValue = '', 
+  onChange, 
+  placeholder = 'Write your content here...' 
+}) => {
+  const editorRef = useRef<HTMLDivElement>(null);
+  const [content, setContent] = useState(initialValue);
   const [showFloatingToolbar, setShowFloatingToolbar] = useState(false);
   const [selectionPosition, setSelectionPosition] = useState({ top: 0, left: 0 });
   
@@ -16,7 +26,7 @@ const EnhancedRichTextEditor = ({ initialValue = '', onChange, placeholder = 'Wr
   const handleInput = () => {
     if (editorRef.current) {
       const newContent = editorRef.current.innerHTML;
-      setHtml(newContent);
+      setContent(newContent);
       if (onChange) {
         onChange(newContent);
       }
@@ -24,10 +34,12 @@ const EnhancedRichTextEditor = ({ initialValue = '', onChange, placeholder = 'Wr
   };
 
   // Format document with execCommand
-  const formatDoc = (command, value = null) => {
+  const formatDoc = (command: string, value: string | null = null) => {
     document.execCommand(command, false, value);
     handleInput();
-    editorRef.current.focus();
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
   };
 
   // Handle image insertion
@@ -52,7 +64,7 @@ const EnhancedRichTextEditor = ({ initialValue = '', onChange, placeholder = 'Wr
       
       // Insert the figure at cursor position
       const selection = window.getSelection();
-      if (selection.getRangeAt && selection.rangeCount) {
+      if (selection && selection.getRangeAt && selection.rangeCount) {
         const range = selection.getRangeAt(0);
         range.deleteContents();
         range.insertNode(figure);
@@ -71,6 +83,8 @@ const EnhancedRichTextEditor = ({ initialValue = '', onChange, placeholder = 'Wr
   // Handle link creation
   const createLink = () => {
     const selection = window.getSelection();
+    
+    if (!selection) return;
     
     // Check if text is selected
     if (selection.toString().length > 0) {
@@ -105,7 +119,7 @@ const EnhancedRichTextEditor = ({ initialValue = '', onChange, placeholder = 'Wr
   };
 
   // Format block elements
-  const formatBlock = (block) => {
+  const formatBlock = (block: string) => {
     formatDoc('formatBlock', block);
   };
 
@@ -116,15 +130,17 @@ const EnhancedRichTextEditor = ({ initialValue = '', onChange, placeholder = 'Wr
     
     // Insert at cursor position
     const selection = window.getSelection();
-    const range = selection.getRangeAt(0);
-    range.deleteContents();
-    range.insertNode(divider);
-    
-    // Move cursor after the divider
-    range.setStartAfter(divider);
-    range.setEndAfter(divider);
-    selection.removeAllRanges();
-    selection.addRange(range);
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      range.insertNode(divider);
+      
+      // Move cursor after the divider
+      range.setStartAfter(divider);
+      range.setEndAfter(divider);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
     
     handleInput();
   };
@@ -305,7 +321,7 @@ const EnhancedRichTextEditor = ({ initialValue = '', onChange, placeholder = 'Wr
         className="content p-4 min-h-[400px] text-indigo-100 focus:outline-none"
         contentEditable="true"
         onInput={handleInput}
-        placeholder={placeholder}
+        data-placeholder={placeholder}
         spellCheck="true"
       ></div>
 

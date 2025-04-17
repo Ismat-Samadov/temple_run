@@ -7,21 +7,21 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 import { BlogPost } from '@/types/user';
-import { formatBlogContent, getReadingTime, generateTableOfContents } from '@/utils/blogFormatter';
+import { formatBlogContent, getReadingTime, generateTableOfContents, TocItem } from '@/utils/blogFormatter';
 import { Clock, Calendar, Tag, User, Edit, Trash2, Share2 } from 'lucide-react';
 
-interface BlogPostProps {
+interface BlogPostDetailProps {
   slug: string;
 }
 
-export default function BlogPostDetail({ slug }: BlogPostProps) {
+export default function BlogPostDetail({ slug }: BlogPostDetailProps) {
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
   const [formattedContent, setFormattedContent] = useState<string>('');
   const [showToc, setShowToc] = useState(false);
-  const [tableOfContents, setTableOfContents] = useState<Array<{id: string, title: string, level: number}>>([]);
+  const [tableOfContents, setTableOfContents] = useState<TocItem[]>([]);
   const { user } = useAuth();
   const router = useRouter();
   const isUserAdmin = user?.role === 'admin';

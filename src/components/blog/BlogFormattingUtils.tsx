@@ -1,10 +1,73 @@
 // src/components/blog/BlogFormattingUtils.tsx
-import React from 'react';
+import React, { ReactNode } from 'react';
+
+// Type definitions
+interface CalloutProps {
+  children: ReactNode;
+  type?: 'info' | 'warning' | 'error' | 'success' | 'note';
+}
+
+interface PullQuoteProps {
+  text: string;
+  author?: string;
+  position?: 'left' | 'center' | 'right';
+}
+
+interface FigureWithCaptionProps {
+  src: string;
+  alt?: string;
+  caption?: string;
+  size?: 'small' | 'medium' | 'large' | 'full';
+  align?: 'left' | 'center' | 'right';
+}
+
+interface SectionTitleProps {
+  children: ReactNode;
+  id: string;
+}
+
+interface CodeBlockProps {
+  code: string;
+  language?: string;
+}
+
+interface HighlightProps {
+  children: ReactNode;
+  color?: 'yellow' | 'blue' | 'green' | 'red' | 'purple';
+}
+
+interface DropCapProps {
+  children: ReactNode;
+}
+
+interface TableOfContentsProps {
+  items: Array<{id: string; title: string}>;
+}
+
+interface TwoColumnLayoutProps {
+  leftContent: ReactNode;
+  rightContent: ReactNode;
+}
+
+interface AuthorBioProps {
+  name: string;
+  avatar?: string;
+  bio: string;
+}
+
+interface ReadMoreSectionProps {
+  posts: Array<{slug: string; title: string; summary: string}>;
+}
+
+interface EmbedContainerProps {
+  children: ReactNode;
+  caption?: string;
+}
 
 // A collection of utility components for blog post formatting
 
 // Medium-style callout component
-export const Callout = ({ children, type = 'info' }) => {
+export const Callout: React.FC<CalloutProps> = ({ children, type = 'info' }) => {
   const styles = {
     info: 'bg-blue-900/20 border-l-4 border-blue-500',
     warning: 'bg-yellow-900/20 border-l-4 border-yellow-500',
@@ -21,7 +84,7 @@ export const Callout = ({ children, type = 'info' }) => {
 };
 
 // Medium-style pull quote
-export const PullQuote = ({ text, author, position = 'center' }) => {
+export const PullQuote: React.FC<PullQuoteProps> = ({ text, author, position = 'center' }) => {
   const positionStyles = {
     left: 'ml-0 mr-auto text-left',
     center: 'mx-auto text-center',
@@ -30,7 +93,7 @@ export const PullQuote = ({ text, author, position = 'center' }) => {
 
   return (
     <blockquote className={`my-8 max-w-2xl ${positionStyles[position]}`}>
-      <p className="text-xl font-serif italic text-indigo-200">"{text}"</p>
+      <p className="text-xl font-serif italic text-indigo-200">&ldquo;{text}&rdquo;</p>
       {author && (
         <cite className="block mt-4 text-sm text-indigo-300 not-italic">— {author}</cite>
       )}
@@ -39,7 +102,13 @@ export const PullQuote = ({ text, author, position = 'center' }) => {
 };
 
 // Medium-style image caption wrapper
-export const FigureWithCaption = ({ src, alt, caption, size = 'large', align = 'center' }) => {
+export const FigureWithCaption: React.FC<FigureWithCaptionProps> = ({ 
+  src, 
+  alt = '', 
+  caption, 
+  size = 'large', 
+  align = 'center' 
+}) => {
   const sizeStyles = {
     small: 'max-w-sm',
     medium: 'max-w-lg',
@@ -55,9 +124,10 @@ export const FigureWithCaption = ({ src, alt, caption, size = 'large', align = '
 
   return (
     <figure className={`my-8 ${sizeStyles[size]} ${alignStyles[align]}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img 
         src={src}
-        alt={alt || ''}
+        alt={alt}
         className="rounded-lg shadow-lg w-full h-auto"
       />
       {caption && (
@@ -70,7 +140,7 @@ export const FigureWithCaption = ({ src, alt, caption, size = 'large', align = '
 };
 
 // Medium-style content divider
-export const ContentDivider = () => {
+export const ContentDivider: React.FC = () => {
   return (
     <div className="content-divider my-12">
       <div className="text-center">
@@ -81,7 +151,7 @@ export const ContentDivider = () => {
 };
 
 // Medium-style section title
-export const SectionTitle = ({ children, id }) => {
+export const SectionTitle: React.FC<SectionTitleProps> = ({ children, id }) => {
   return (
     <h2 
       id={id} 
@@ -93,7 +163,7 @@ export const SectionTitle = ({ children, id }) => {
 };
 
 // Medium-style code block with language label
-export const CodeBlock = ({ code, language }) => {
+export const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
   return (
     <div className="my-6 overflow-hidden rounded-lg">
       {language && (
@@ -109,7 +179,7 @@ export const CodeBlock = ({ code, language }) => {
 };
 
 // Medium-style highlighted text
-export const Highlight = ({ children, color = 'yellow' }) => {
+export const Highlight: React.FC<HighlightProps> = ({ children, color = 'yellow' }) => {
   const colorStyles = {
     yellow: 'bg-yellow-200/20 text-yellow-100',
     blue: 'bg-blue-200/20 text-blue-100',
@@ -126,7 +196,7 @@ export const Highlight = ({ children, color = 'yellow' }) => {
 };
 
 // Medium-style dropcap (first letter styled prominently)
-export const DropCap = ({ children }) => {
+export const DropCap: React.FC<DropCapProps> = ({ children }) => {
   if (typeof children !== 'string' || !children.length) {
     return <p>{children}</p>;
   }
@@ -145,7 +215,7 @@ export const DropCap = ({ children }) => {
 };
 
 // Medium-style table of contents
-export const TableOfContents = ({ items }) => {
+export const TableOfContents: React.FC<TableOfContentsProps> = ({ items }) => {
   return (
     <div className="my-8 p-4 bg-gray-800/50 rounded-lg border border-gray-700">
       <h3 className="text-lg font-medium text-indigo-200 mb-4">Table of Contents</h3>
@@ -163,7 +233,7 @@ export const TableOfContents = ({ items }) => {
 };
 
 // Medium-style two-column layout
-export const TwoColumnLayout = ({ leftContent, rightContent }) => {
+export const TwoColumnLayout: React.FC<TwoColumnLayoutProps> = ({ leftContent, rightContent }) => {
   return (
     <div className="flex flex-col md:flex-row gap-6 my-8">
       <div className="flex-1">{leftContent}</div>
@@ -173,10 +243,11 @@ export const TwoColumnLayout = ({ leftContent, rightContent }) => {
 };
 
 // Medium-style author bio component
-export const AuthorBio = ({ name, avatar, bio }) => {
+export const AuthorBio: React.FC<AuthorBioProps> = ({ name, avatar, bio }) => {
   return (
     <div className="flex items-start space-x-4 my-8 p-4 bg-gray-800/60 rounded-lg border border-gray-700">
       {avatar && (
+        // eslint-disable-next-line @next/next/no-img-element
         <img 
           src={avatar} 
           alt={`${name}'s avatar`} 
@@ -192,7 +263,7 @@ export const AuthorBio = ({ name, avatar, bio }) => {
 };
 
 // Medium-style read more section
-export const ReadMoreSection = ({ posts }) => {
+export const ReadMoreSection: React.FC<ReadMoreSectionProps> = ({ posts }) => {
   return (
     <div className="my-12 pt-8 border-t border-gray-700">
       <h3 className="text-xl font-bold text-indigo-100 mb-6">More Articles</h3>
@@ -217,7 +288,7 @@ export const ReadMoreSection = ({ posts }) => {
 };
 
 // Medium-style embed container
-export const EmbedContainer = ({ children, caption }) => {
+export const EmbedContainer: React.FC<EmbedContainerProps> = ({ children, caption }) => {
   return (
     <div className="my-8">
       <div className="overflow-hidden rounded-lg bg-gray-900/50 p-4">
@@ -232,7 +303,8 @@ export const EmbedContainer = ({ children, caption }) => {
   );
 };
 
-export default {
+// Export all components in a named object
+const BlogFormattingUtils = {
   Callout,
   PullQuote,
   FigureWithCaption,
@@ -247,3 +319,5 @@ export default {
   ReadMoreSection,
   EmbedContainer
 };
+
+export default BlogFormattingUtils;
