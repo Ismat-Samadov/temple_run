@@ -50,7 +50,12 @@ export default function BlogPostDetail({ slug }: BlogPostDetailProps) {
           // Reset image error state when loading a new post
           setImageError(false);
         } else {
-          setError('Blog post not found');
+          // Only set error if we received data but didn't find the post
+          if (allPosts.length > 0) {
+            setError('Blog post not found');
+          } else {
+            setError('Failed to load blog posts. Please try again later.');
+          }
         }
       } catch (err) {
         setError('Failed to load blog post. Please try again later.');

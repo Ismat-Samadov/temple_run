@@ -2,41 +2,23 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import axios from 'axios';
-import { BlogPost } from '@/types/user';
+import { useParams } from 'next/navigation';
 import BlogPostDetail from '@/components/blog/BlogPostDetail';
 
 export default function BlogPostPage() {
   const [loading, setLoading] = useState(true);
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  const router = useRouter();
   const params = useParams();
   const slug = params?.slug as string;
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await axios.get('/api/blog');
-        setPosts(response.data.posts || []);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchPosts();
+    // Simple effect to stop the initial loading state after component mounts
+    // This gives the BlogPostDetail component time to handle its own loading state
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, []);
-
-  // Check if the post exists
-  const postExists = posts.some(post => post.slug === slug);
-
-  useEffect(() => {
-    if (!loading && !postExists && posts.length > 0) {
-      router.push('/blog');
-    }
-  }, [loading, postExists, posts, router]);
 
   if (loading) {
     return (
@@ -45,6 +27,16 @@ export default function BlogPostPage() {
           <div className="h-3 w-3 bg-indigo-400 rounded-full"></div>
           <div className="h-3 w-3 bg-indigo-400 rounded-full"></div>
           <div className="h-3 w-3 bg-indigo-400 rounded-full"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!slug) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-950 to-gray-900 flex justify-center items-center">
+        <div className="text-center text-indigo-200">
+          <p>Invalid blog post URL</p>
         </div>
       </div>
     );
