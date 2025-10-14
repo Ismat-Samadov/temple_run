@@ -97,16 +97,15 @@ export default function AdminDashboard() {
           </Link>
 
           {/* User Management Card */}
-          <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg shadow p-6 border border-gray-700">
+          <Link href="/admin/users" className="bg-gray-800/60 backdrop-blur-sm rounded-lg shadow p-6 border border-gray-700 hover:bg-gray-700/60 transition-colors">
             <div className="flex flex-col items-center text-center">
               <Users className="h-12 w-12 text-indigo-400 mb-4" />
               <h3 className="text-lg font-medium text-indigo-100 mb-2">User Management</h3>
               <p className="text-sm text-indigo-300">
-                Manage user accounts and permissions
+                View and manage all users
               </p>
-              <span className="mt-4 text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">Coming Soon</span>
             </div>
-          </div>
+          </Link>
 
           {/* System Settings Card */}
           <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg shadow p-6 border border-gray-700">
@@ -151,12 +150,18 @@ export default function AdminDashboard() {
             <h2 className="text-xl font-medium text-indigo-100">Quick Actions</h2>
           </div>
           <div className="border-t border-gray-700 px-4 py-5 sm:px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Link
                 href="/admin/doctors"
                 className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg text-center transition"
               >
                 Verify Doctor Accounts
+              </Link>
+              <Link
+                href="/admin/users"
+                className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg text-center transition"
+              >
+                Manage Users
               </Link>
               <button
                 onClick={() => router.push('/doctors')}

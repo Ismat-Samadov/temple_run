@@ -61,60 +61,16 @@ export default function ProfilePage() {
 
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 relative">
         <div className="px-4 py-6 sm:px-0">
-          <div className="bg-gray-800/60 backdrop-blur-sm shadow overflow-hidden rounded-lg border border-gray-700">
-            <div className="px-4 py-5 sm:px-6">
-              <h2 className="text-2xl font-bold text-indigo-100">User Profile</h2>
-              <p className="mt-1 max-w-2xl text-sm text-indigo-300">
-                Personal details and account information
-              </p>
-            </div>
-            <div className="border-t border-gray-700">
-              <dl>
-                <div className="bg-gray-800/40 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-indigo-300">Full name</dt>
-                  <dd className="mt-1 text-sm text-indigo-100 sm:mt-0 sm:col-span-2">
-                    {user.name}
-                  </dd>
-                </div>
-                <div className="bg-gray-900/40 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-indigo-300">Email address</dt>
-                  <dd className="mt-1 text-sm text-indigo-100 sm:mt-0 sm:col-span-2">
-                    {user.email}
-                  </dd>
-                </div>
-                <div className="bg-gray-800/40 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-indigo-300">Account type</dt>
-                  <dd className="mt-1 text-sm sm:mt-0 sm:col-span-2">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      user.role === 'admin'
-                        ? 'bg-purple-100 text-purple-800'
-                        : user.role === 'doctor'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-blue-100 text-blue-800'
-                    }`}>
-                      {user.role === 'admin' ? 'Administrator' : user.role === 'doctor' ? 'Doctor' : 'Patient'}
-                    </span>
-                  </dd>
-                </div>
-                <div className="bg-gray-900/40 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-indigo-300">Account created</dt>
-                  <dd className="mt-1 text-sm text-indigo-100 sm:mt-0 sm:col-span-2">
-                    {new Date(user.createdAt).toLocaleString()}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-          </div>
-
-          <div className="mt-8 bg-gray-800/60 backdrop-blur-sm shadow overflow-hidden rounded-lg border border-gray-700">
+          {/* Quick Actions - Moved to top */}
+          <div className="mb-8 bg-gray-800/60 backdrop-blur-sm shadow overflow-hidden rounded-lg border border-gray-700">
             <div className="px-4 py-5 sm:px-6">
               <h2 className="text-xl font-medium text-indigo-100">Quick Actions</h2>
               <p className="mt-1 max-w-2xl text-sm text-indigo-300">
-                Access your appointment features
+                {user.role === 'admin' ? 'Manage the Randevu platform' : 'Access your features'}
               </p>
             </div>
             <div className="border-t border-gray-700 px-4 py-5 sm:px-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {user.role === 'admin' ? (
                   <>
                     <div className="p-4 border border-gray-700 rounded-lg hover:bg-gray-700/40 transition cursor-pointer"
@@ -129,6 +85,13 @@ export default function ProfilePage() {
                       <h3 className="text-lg font-medium text-indigo-200">Verify Doctors</h3>
                       <p className="mt-2 text-sm text-indigo-300">
                         Review and verify doctor accounts
+                      </p>
+                    </div>
+                    <div className="p-4 border border-gray-700 rounded-lg hover:bg-gray-700/40 transition cursor-pointer"
+                         onClick={() => router.push('/admin/users')}>
+                      <h3 className="text-lg font-medium text-indigo-200">User Management</h3>
+                      <p className="mt-2 text-sm text-indigo-300">
+                        View and manage all users
                       </p>
                     </div>
                     <div className="p-4 border border-gray-700 rounded-lg hover:bg-gray-700/40 transition cursor-pointer"
@@ -175,6 +138,52 @@ export default function ProfilePage() {
                   </>
                 )}
               </div>
+            </div>
+          </div>
+
+          {/* User Profile Info */}
+          <div className="bg-gray-800/60 backdrop-blur-sm shadow overflow-hidden rounded-lg border border-gray-700">
+            <div className="px-4 py-5 sm:px-6">
+              <h2 className="text-2xl font-bold text-indigo-100">User Profile</h2>
+              <p className="mt-1 max-w-2xl text-sm text-indigo-300">
+                Personal details and account information
+              </p>
+            </div>
+            <div className="border-t border-gray-700">
+              <dl>
+                <div className="bg-gray-800/40 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-indigo-300">Full name</dt>
+                  <dd className="mt-1 text-sm text-indigo-100 sm:mt-0 sm:col-span-2">
+                    {user.name}
+                  </dd>
+                </div>
+                <div className="bg-gray-900/40 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-indigo-300">Email address</dt>
+                  <dd className="mt-1 text-sm text-indigo-100 sm:mt-0 sm:col-span-2">
+                    {user.email}
+                  </dd>
+                </div>
+                <div className="bg-gray-800/40 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-indigo-300">Account type</dt>
+                  <dd className="mt-1 text-sm sm:mt-0 sm:col-span-2">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      user.role === 'admin'
+                        ? 'bg-purple-100 text-purple-800'
+                        : user.role === 'doctor'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {user.role === 'admin' ? 'Administrator' : user.role === 'doctor' ? 'Doctor' : 'Patient'}
+                    </span>
+                  </dd>
+                </div>
+                <div className="bg-gray-900/40 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-indigo-300">Account created</dt>
+                  <dd className="mt-1 text-sm text-indigo-100 sm:mt-0 sm:col-span-2">
+                    {new Date(user.createdAt).toLocaleString()}
+                  </dd>
+                </div>
+              </dl>
             </div>
           </div>
         </div>
