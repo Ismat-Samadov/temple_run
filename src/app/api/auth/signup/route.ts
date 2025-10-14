@@ -7,8 +7,12 @@ import { SignUpData } from '@/types/user';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    console.log('=== SIGNUP DEBUG ===');
+    console.log('Raw body received:', JSON.stringify(body));
+
     const { name, email, password, role }: SignUpData = body;
-    
+
+    console.log('After destructuring - role:', role, 'type:', typeof role);
     console.log('Sign-up request received for:', email, 'with role:', role);
     
     // Validate input
@@ -29,14 +33,16 @@ export async function POST(request: Request) {
     }
     
     // Validate role
-    if (role !== 'doctor' && role !== 'patient') {
-      console.log('Sign-up validation failed: invalid role. Defaulting to patient.');
-      // Default to patient if role is invalid
-      body.role = 'patient';
+    const finalRole = (role === 'doctor' || role === 'patient') ? role : 'patient';
+
+    console.log('Final role to be saved:', finalRole);
+
+    if (finalRole === 'patient' && role !== 'patient') {
+      console.log('WARNING: Role was changed from', role, 'to patient due to validation');
     }
-    
+
     // Create user
-    const user = await createUser({ name, email, password, role: body.role });
+    const user = await createUser({ name, email, password, role: finalRole });
     
     if (!user) {
       console.log('User creation failed: email may already be in use');

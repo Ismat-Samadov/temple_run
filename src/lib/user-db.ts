@@ -9,7 +9,9 @@ import { query } from './db';
  */
 export async function createUser(userData: SignUpData): Promise<User | null> {
   try {
+    console.log('=== USER-DB CREATE USER ===');
     console.log('Creating user with email:', userData.email);
+    console.log('Received userData.role:', userData.role, 'type:', typeof userData.role);
 
     // Check if email already exists
     const emailCheckResult = await query(
@@ -32,7 +34,8 @@ export async function createUser(userData: SignUpData): Promise<User | null> {
     
     // Ensure role is either 'doctor' or 'patient', default to 'patient'
     const role = userData.role === 'doctor' ? 'doctor' : 'patient';
-    
+
+    console.log('After validation - final role to insert:', role);
     console.log('Inserting new user with ID:', userId, 'and role:', role);
     
     // Insert the new user with role field
