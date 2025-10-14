@@ -10,10 +10,10 @@ import { query } from './db';
 export async function createUser(userData: SignUpData): Promise<User | null> {
   try {
     console.log('Creating user with email:', userData.email);
-    
+
     // Check if email already exists
     const emailCheckResult = await query(
-      'SELECT * FROM users WHERE email = $1',
+      'SELECT * FROM randevu.users WHERE email = $1',
       [userData.email.toLowerCase()]
     );
     
@@ -37,8 +37,8 @@ export async function createUser(userData: SignUpData): Promise<User | null> {
     
     // Insert the new user with role field
     const result = await query(
-      `INSERT INTO users (id, name, email, password, role, created_at, updated_at) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7) 
+      `INSERT INTO randevu.users (id, name, email, password, role, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING id, name, email, role, created_at, updated_at`,
       [
         userId,
@@ -78,7 +78,7 @@ export async function createUser(userData: SignUpData): Promise<User | null> {
 export async function findUserByEmail(email: string): Promise<User | null> {
   try {
     const result = await query(
-      'SELECT id, name, email, role, created_at, updated_at FROM users WHERE email = $1',
+      'SELECT id, name, email, role, created_at, updated_at FROM randevu.users WHERE email = $1',
       [email.toLowerCase()]
     );
     
@@ -106,7 +106,7 @@ export async function findUserByEmail(email: string): Promise<User | null> {
 export async function findUserById(id: string): Promise<User | null> {
   try {
     const result = await query(
-      'SELECT id, name, email, role, created_at, updated_at FROM users WHERE id = $1',
+      'SELECT id, name, email, role, created_at, updated_at FROM randevu.users WHERE id = $1',
       [id]
     );
     
@@ -134,7 +134,7 @@ export async function findUserById(id: string): Promise<User | null> {
 export async function validatePassword(userId: string, password: string): Promise<boolean> {
   try {
     const result = await query(
-      'SELECT password FROM users WHERE id = $1',
+      'SELECT password FROM randevu.users WHERE id = $1',
       [userId]
     );
     
@@ -157,9 +157,9 @@ export async function updateUserProfile(userId: string, name: string): Promise<U
   try {
     const now = new Date();
     const result = await query(
-      `UPDATE users 
-       SET name = $1, updated_at = $2 
-       WHERE id = $3 
+      `UPDATE randevu.users
+       SET name = $1, updated_at = $2
+       WHERE id = $3
        RETURNING id, name, email, role, created_at, updated_at`,
       [name, now, userId]
     );
@@ -189,9 +189,9 @@ export async function updateUserRole(userId: string, role: 'doctor' | 'patient')
   try {
     const now = new Date();
     const result = await query(
-      `UPDATE users 
-       SET role = $1, updated_at = $2 
-       WHERE id = $3 
+      `UPDATE randevu.users
+       SET role = $1, updated_at = $2
+       WHERE id = $3
        RETURNING id, name, email, role, created_at, updated_at`,
       [role, now, userId]
     );
@@ -220,8 +220,8 @@ export async function updateUserRole(userId: string, role: 'doctor' | 'patient')
 export async function markExistingUsersAsPatients(): Promise<boolean> {
   try {
     await query(
-      `UPDATE users 
-       SET role = 'patient' 
+      `UPDATE randevu.users
+       SET role = 'patient'
        WHERE role IS NULL OR role = ''`
     );
     
@@ -239,7 +239,7 @@ export async function saveChatMessage(userId: string, message: string, role: 'us
   try {
     const messageId = uuidv4();
     await query(
-      `INSERT INTO chat_history (id, user_id, message, role) 
+      `INSERT INTO randevu.chat_history (id, user_id, message, role)
        VALUES ($1, $2, $3, $4)`,
       [messageId, userId, message, role]
     );
@@ -257,10 +257,10 @@ export async function saveChatMessage(userId: string, message: string, role: 'us
 export async function getChatHistory(userId: string, limit: number = 20): Promise<any[]> {
   try {
     const result = await query(
-      `SELECT id, message, role, timestamp 
-       FROM chat_history 
-       WHERE user_id = $1 
-       ORDER BY timestamp DESC 
+      `SELECT id, message, role, timestamp
+       FROM randevu.chat_history
+       WHERE user_id = $1
+       ORDER BY timestamp DESC
        LIMIT $2`,
       [userId, limit]
     );
@@ -287,32 +287,32 @@ export async function createAdminUser(userData: SignUpData): Promise<User | null
     
     // Check if email already exists
     const emailCheckResult = await query(
-      'SELECT * FROM users WHERE email = $1',
+      'SELECT * FROM randevu.users WHERE email = $1',
       [userData.email.toLowerCase()]
     );
-    
+
     if (emailCheckResult.rows.length > 0) {
       console.log('Email already exists:', userData.email);
       return null; // Email already exists
     }
-    
+
     // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(userData.password, salt);
-    
+
     // Generate UUID for the new user
     const userId = uuidv4();
     const now = new Date();
-    
+
     // Force role to be admin
     const role = 'admin';
-    
+
     console.log('Inserting new admin user with ID:', userId);
-    
+
     // Insert the new admin user
     const result = await query(
-      `INSERT INTO users (id, name, email, password, role, created_at, updated_at) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7) 
+      `INSERT INTO randevu.users (id, name, email, password, role, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING id, name, email, role, created_at, updated_at`,
       [
         userId,
@@ -352,7 +352,7 @@ export async function createAdminUser(userData: SignUpData): Promise<User | null
 export async function isAdmin(userId: string): Promise<boolean> {
   try {
     const result = await query(
-      'SELECT role FROM users WHERE id = $1',
+      'SELECT role FROM randevu.users WHERE id = $1',
       [userId]
     );
     
@@ -382,8 +382,8 @@ export async function verifyDoctorAccount(doctorId: string, adminId: string): Pr
     
     // Update the doctor's account (for now just making sure they have the doctor role)
     const result = await query(
-      `UPDATE users 
-       SET role = 'doctor', updated_at = CURRENT_TIMESTAMP 
+      `UPDATE randevu.users
+       SET role = 'doctor', updated_at = CURRENT_TIMESTAMP
        WHERE id = $1 AND role = 'doctor'
        RETURNING id`,
       [doctorId]
@@ -402,7 +402,7 @@ export async function verifyDoctorAccount(doctorId: string, adminId: string): Pr
 export async function getAllDoctors(): Promise<User[]> {
   try {
     const result = await query(
-      'SELECT id, name, email, role, created_at, updated_at FROM users WHERE role = $1',
+      'SELECT id, name, email, role, created_at, updated_at FROM randevu.users WHERE role = $1',
       ['doctor']
     );
     
