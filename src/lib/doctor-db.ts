@@ -82,8 +82,13 @@ export async function getVerifiedDoctors(filters?: {
 }): Promise<DoctorWithProfile[]> {
   let queryText = `
     SELECT
-      u.id, u.name, u.email, u.phone, u.role, u.created_at, u.updated_at,
-      dp.*
+      u.id as user_id, u.name, u.email, u.phone, u.role,
+      u.created_at as user_created_at, u.updated_at as user_updated_at,
+      dp.id as profile_id, dp.user_id as profile_user_id, dp.specialization,
+      dp.license_number, dp.bio, dp.education, dp.experience_years,
+      dp.consultation_fee, dp.clinic_name, dp.clinic_address, dp.city,
+      dp.is_verified, dp.rating, dp.total_reviews,
+      dp.created_at as profile_created_at, dp.updated_at as profile_updated_at
     FROM randevu.users u
     INNER JOIN randevu.doctor_profiles dp ON u.id = dp.user_id
     WHERE u.role = 'doctor' AND dp.is_verified = true
@@ -120,16 +125,16 @@ export async function getVerifiedDoctors(filters?: {
   const result = await query(queryText, params);
 
   return result.rows.map((row) => ({
-    id: row.id,
+    id: row.user_id,
     name: row.name,
     email: row.email,
     phone: row.phone,
     role: row.role,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
+    createdAt: row.user_created_at,
+    updatedAt: row.user_updated_at,
     profile: {
-      id: row.id,
-      userId: row.user_id,
+      id: row.profile_id,
+      userId: row.profile_user_id,
       specialization: row.specialization,
       licenseNumber: row.license_number,
       bio: row.bio,
@@ -142,8 +147,8 @@ export async function getVerifiedDoctors(filters?: {
       isVerified: row.is_verified,
       rating: parseFloat(row.rating),
       totalReviews: row.total_reviews,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
+      createdAt: row.profile_created_at,
+      updatedAt: row.profile_updated_at,
     },
   }));
 }
