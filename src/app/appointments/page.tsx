@@ -3,9 +3,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { AppointmentWithDetails } from '@/types/user';
-import { Calendar, Clock, User, Stethoscope, MapPin, FileText, X } from 'lucide-react';
+import { Calendar, Clock, User, Stethoscope, MapPin, FileText, X, ExternalLink } from 'lucide-react';
 
 export default function AppointmentsPage() {
   const { user, loading: authLoading } = useAuth();
@@ -210,9 +211,15 @@ export default function AppointmentsPage() {
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
                     <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-xl font-semibold text-gray-900">
-                        Dr. {appointment.doctorName}
-                      </h3>
+                      <Link
+                        href={`/doctors/${appointment.doctorId}`}
+                        className="group"
+                      >
+                        <h3 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors flex items-center gap-2">
+                          Dr. {appointment.doctorName}
+                          <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </h3>
+                      </Link>
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
                           appointment.status
@@ -222,10 +229,13 @@ export default function AppointmentsPage() {
                       </span>
                     </div>
 
-                    <div className="flex items-center text-blue-600 mb-4">
+                    <Link
+                      href={`/doctors/${appointment.doctorId}`}
+                      className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4 transition-colors"
+                    >
                       <Stethoscope className="h-4 w-4 mr-2" />
                       <span className="text-sm">{appointment.doctorSpecialization}</span>
-                    </div>
+                    </Link>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                       <div className="flex items-center text-gray-600">
