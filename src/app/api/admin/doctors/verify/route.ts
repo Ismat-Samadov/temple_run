@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/edge-jwt';
 import { verifyDoctor } from '@/lib/doctor-db';
+import { createDefaultAvailability } from '@/lib/schedule-db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,6 +38,15 @@ export async function POST(request: NextRequest) {
 
     // Verify the doctor's account
     await verifyDoctor(doctorId);
+
+    // Automatically create default availability schedule
+    try {
+      await createDefaultAvailability(doctorId);
+      console.log('[Doctor Verification] Created default availability schedule for doctor:', doctorId);
+    } catch (scheduleError) {
+      // Log error but don't fail verification if schedule creation fails
+      console.error('[Doctor Verification] Failed to create default schedule:', scheduleError);
+    }
 
     return NextResponse.json({
       success: true,
